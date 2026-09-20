@@ -35,6 +35,7 @@ body{
   color:var(--sahne);
   font-family:var(--ui);
   overflow:hidden;
+  overscroll-behavior:none;
   -webkit-font-smoothing:antialiased;
   touch-action:none;
 }
@@ -123,6 +124,30 @@ body[data-intro="1"] #touch{display:none}
 #rede .wer{font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--volt)}
 #rede .was{font-size:15px;line-height:1.4;margin-top:3px;text-wrap:balance}
 
+#rufanzeige{
+  position:absolute;left:50%;transform:translateX(-50%);
+  bottom:calc(44px + env(safe-area-inset-bottom,0px));
+  display:flex;align-items:center;gap:10px;padding:7px 15px 8px;
+}
+#rufanzeige .rl{font-family:var(--mono);font-size:9px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--grau)}
+#rufanzeige .punkte{display:flex;gap:6px}
+#rufanzeige .punkte i{width:11px;height:11px;border-radius:50%;
+  background:rgba(255,255,255,.14);box-shadow:inset 0 0 0 1.5px rgba(255,158,203,.38);
+  transition:background .18s, box-shadow .18s}
+#rufanzeige .punkte i[data-voll="1"]{background:var(--plastik);
+  box-shadow:0 0 9px rgba(255,142,198,.75), inset 0 0 0 1.5px rgba(255,220,239,.9)}
+#rufanzeige .sperre{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;
+  color:var(--gold);font-variant-numeric:tabular-nums}
+#rufanzeige[data-sperre="1"]{border-color:rgba(255,208,78,.55)}
+#rufanzeige.zuck{animation:zuck .34s}
+@keyframes zuck{
+  0%,100%{transform:translateX(-50%)}
+  25%{transform:translateX(calc(-50% - 7px))}
+  75%{transform:translateX(calc(-50% + 7px))}
+}
+#ruf:disabled{opacity:.42;filter:grayscale(.65)}
+
 #tipp{
   position:absolute;left:50%;transform:translateX(-50%);
   bottom:calc(16px + env(safe-area-inset-bottom,0px));
@@ -138,21 +163,24 @@ kbd{
 #touch{position:absolute;inset:0;display:none}
 body[data-touch="1"] #touch{display:block}
 #stick{
-  position:absolute;left:max(20px,env(safe-area-inset-left,0px));
-  bottom:calc(24px + env(safe-area-inset-bottom,0px));
-  width:124px;height:124px;border-radius:50%;pointer-events:auto;
+  position:absolute;
+  left:calc(env(safe-area-inset-left,0px) + min(12vw,110px));
+  bottom:calc(env(safe-area-inset-bottom,0px) + 9vh);
+  width:min(130px,31vw);height:min(130px,31vw);border-radius:50%;pointer-events:auto;
   background:radial-gradient(circle at 50% 42%,rgba(255,158,203,.16),rgba(255,158,203,.05));
   border:1.5px solid rgba(255,158,203,.3);
 }
-#knubbel{position:absolute;left:50%;top:50%;width:52px;height:52px;margin:-26px 0 0 -26px;border-radius:50%;
+#knubbel{position:absolute;left:29%;top:29%;width:42%;height:42%;border-radius:50%;
   background:radial-gradient(circle at 36% 30%,var(--plastik-hell),var(--plastik-tief));
   box-shadow:0 5px 14px rgba(0,0,0,.45)}
 #ruf{
-  position:absolute;right:max(22px,env(safe-area-inset-right,0px));
-  bottom:calc(34px + env(safe-area-inset-bottom,0px));
-  width:86px;height:86px;border-radius:50%;pointer-events:auto;
+  position:absolute;
+  right:calc(env(safe-area-inset-right,0px) + min(12vw,110px));
+  bottom:calc(env(safe-area-inset-bottom,0px) + 12vh);
+  width:min(94px,23vw);height:min(94px,23vw);border-radius:50%;pointer-events:auto;
   background:radial-gradient(circle at 36% 30%,var(--plastik-hell),var(--plastik-tief));
-  border:none;color:#3a0f2a;font-family:var(--disp);font-weight:800;font-size:14px;letter-spacing:.04em;
+  border:none;color:#3a0f2a;font-family:var(--disp);font-weight:800;
+  font-size:min(14px,3.5vw);letter-spacing:.03em;
   box-shadow:0 7px 18px rgba(0,0,0,.5), inset 0 -4px 0 rgba(0,0,0,.18);
 }
 #ruf:active{transform:translateY(2px)}
@@ -238,12 +266,31 @@ body[data-touch="1"] #touch{display:block}
 .nochmal:active{transform:translateY(3px);box-shadow:0 3px 0 #a6417a}
 
 @media (max-width:720px){
-  #crew{padding:8px 9px}
-  .chip .nam{font-size:11.5px}
-  #ziel{max-width:62vw;padding:6px 12px 7px}
-  #ziel .t{font-size:13px}
+  /* Gruppe als Koepfe nebeneinander statt als Liste */
+  #crew{flex-direction:row;align-items:flex-start;gap:9px;padding:8px 10px}
+  #crew h3{display:none}
+  .chip{flex-direction:column;gap:3px;align-items:center}
+  .chip .nam,.chip .zustand{display:none}
+  .ravebalken{width:22px}
+  #obenLinks{max-width:none}
+  #marke{padding:7px 11px 8px}
+  #marke b{font-size:14px}
+  #marke span{display:none}
+
   #kartewrap{display:none}
+  #uhr{padding:7px 11px}
   #uhr .zeit{font-size:16px}
+  #uhr .meta{font-size:8.5px}
+  #etage{padding:5px 10px;font-size:9.5px}
+
+  /* Ziel unter die obere Reihe, volle Breite */
+  #ziel{top:calc(env(safe-area-inset-top,0px) + 84px);max-width:90vw;padding:6px 13px 7px}
+  #ziel .t{font-size:13px}
+
+  /* Text ueber die Daumen legen, nicht darunter */
+  #rede{bottom:calc(env(safe-area-inset-bottom,0px) + 34vh);max-width:90vw}
+  #rufanzeige{bottom:calc(env(safe-area-inset-bottom,0px) + 27vh)}
+  #tipp{display:none}
 }
 @media (prefers-reduced-motion:reduce){
   .chip[data-z="tanzt"]{animation:none}
@@ -281,7 +328,13 @@ body[data-touch="1"] #touch{display:block}
       <div class="was" id="redeWas"></div>
     </div>
 
-    <div id="tipp"><kbd>W A S D</kbd> laufen · <kbd>E</kbd> rufen &amp; abgeben</div>
+    <div class="panel" id="rufanzeige">
+      <span class="rl">Rufen</span>
+      <span class="punkte" id="rufPunkte"><i></i><i></i></span>
+      <span class="sperre" id="rufSperre" hidden>heiser</span>
+    </div>
+
+    <div id="tipp"><kbd>W A S D</kbd> laufen · <kbd>E</kbd> rufen &amp; abgeben — zweimal, dann ist die Stimme weg</div>
   </div>
 
   <div id="touch">
@@ -307,6 +360,7 @@ body[data-touch="1"] #touch{display:block}
       <div class="zettel">
         <b>WASD</b> oder Pfeiltasten — laufen<br>
         <b>E</b> oder Leertaste — rufen, wenn jemand hängenbleibt<br>
+        Nur <b>zwei Rufe hintereinander</b>. Wer weiterdrückt, ist 10 Sekunden heiser.<br>
         <b>E</b> am Tresen — Jacken abgeben<br>
         Auf dem Floor halten sie es keine drei Sekunden aus — ruf sie zurueck,<br>
         bevor die Gruppe auseinanderfaellt.
@@ -410,6 +464,9 @@ const ANNAHME = {x:1270, y:398};               // davor: hier wird abgegeben
 const TREPPE_EG = {x:560, y:205};
 const TREPPE_OG = {x:670, y:205};
 const TUERSTEHER = {x:1160, y:372};
+const RUF_MAX = 2;       // zwei Rufe hintereinander
+const RUF_NACH = 4.5;    // Sekunden, bis einer nachwaechst
+const RUF_SPERRE = 10;   // Sekunden heiser, wenn man es uebertreibt
 const SCHLANGE_PLAETZE = [[1148,408],[1176,434],[1144,460],[1178,486],[1150,512]];
 const MECKER = [
   "Hey! Hinten anstellen.",
@@ -446,6 +503,7 @@ const S = {
   spieler:null, gruppe:[], spur:[], npcs:[], funken:[], schlange:[], meckerKuehl:0,
   beat:0, puls:0, takt:0, cutoff:300, cutoffZiel:300,
   verloren:0, abgegeben:0, startZeit:0, rufKuehl:0,
+  rufe:RUF_MAX, rufeLade:0, rufSperre:0, rufZucken:0,
   blitz:0, raumJetzt:"str", wechsel:0, bandOffen:false, introT:0,
 };
 
@@ -465,6 +523,7 @@ function aufstellen() {
   ];
   S.spur = []; S.npcs = []; S.funken = [];
   S.verloren = 0; S.abgegeben = 0; S.etage = 0; S.abgabeLaeuft = false; S.imClub = false;
+  S.rufe = RUF_MAX; S.rufeLade = 0; S.rufSperre = 0; S.rufZucken = 0;
   S.uhr = 23*3600 + 14*60;
   S.phase = "sammeln"; S.startZeit = performance.now();
   for (let i=0;i<5;i++) gruppeSpawnen(true);
@@ -516,7 +575,7 @@ addEventListener("keydown", e => {
   if (["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"," "].includes(e.key)) e.preventDefault();
   if (S.phase === "intro") { introFertig(); return; }
   tasten.add(e.key.toLowerCase());
-  if (e.key.toLowerCase() === "e" || e.key === " ") handeln();
+  if (!e.repeat && (e.key.toLowerCase() === "e" || e.key === " ")) handeln();
 });
 addEventListener("keyup", e => tasten.delete(e.key.toLowerCase()));
 
@@ -530,7 +589,7 @@ function stickAn(e){
 function stickZieh(t){
   const b = stick.getBoundingClientRect();
   let dx = t.clientX - (b.left + b.width/2), dy = t.clientY - (b.top + b.height/2);
-  const l = Math.hypot(dx, dy), max = b.width/2 - 18;
+  const l = Math.hypot(dx, dy), max = b.width * 0.29;
   if (l > max) { dx = dx/l*max; dy = dy/l*max; }
   stickX = dx/max; stickY = dy/max;
   knubbel.style.transform = `translate(${dx}px,${dy}px)`;
@@ -560,16 +619,28 @@ function richtung() {
 /* ======================= Aktion: rufen / abgeben ======================= */
 
 function handeln() {
-  if (S.phase === "start" || S.phase === "intro" || S.phase === "fertig" || S.rufKuehl > 0) return;
+  if (S.phase === "start" || S.phase === "intro" || S.phase === "fertig") return;
   const p = S.spieler;
 
+  // Die Jackenabgabe haengt nicht an der Stimme, die geht immer
   if (S.phase === "garderobe" && S.etage === 1) {
     const nah = Math.hypot(p.x - ANNAHME.x, p.y - ANNAHME.y) < 62;
     if (nah && S.gruppe.every(g => g.dabei)) { abgabeStarten(); return; }
-    if (nah) { sagen("Garderobe", "Erst alle fünf. Ich zähle mit."); return; }
+    if (nah) { sagen("Garderobe", "Erst alle fuenf. Ich zaehle mit."); return; }
   }
 
-  S.rufKuehl = 0.75;
+  // Heiser: gar nichts geht
+  if (S.rufSperre > 0) { S.rufZucken = 0.34; return; }
+  if (S.rufKuehl > 0) return;
+
+  // Keine Rufe mehr uebrig und trotzdem gedrueckt — selbst schuld
+  if (S.rufe <= 0) {
+    S.rufSperre = RUF_SPERRE; S.rufZucken = 0.34;
+    sagen("Polly", "Jetzt ist die Stimme weg. Einmal durchatmen.", 2.8);
+    return;
+  }
+
+  S.rufe--; S.rufeLade = 0; S.rufKuehl = 0.4;
   S.funken.push({x:p.x, y:p.y, r:8, art:"ruf", leben:1});
   let geholt = 0;
   for (const g of S.gruppe) {
@@ -581,7 +652,7 @@ function handeln() {
     }
   }
   if (geholt) sagen("Polly", geholt > 1 ? "Hey! Mitkommen, alle!" : "Hey! Weiter geht's.");
-  else if (S.gruppe.some(g => !g.dabei)) sagen("Polly", "Zu weit weg. Näher ran.");
+  else if (S.gruppe.some(g => !g.dabei)) sagen("Polly", "Zu weit weg. Naeher ran.");
 }
 
 /* ======================= Ablauf ======================= */
@@ -940,14 +1011,22 @@ const Ton = {
 
 /* ======================= Zeichnen ======================= */
 
-let B = {w:0, h:0, dpr:1};
+let B = {w:0, h:0, dpr:1, sx:1, sy:1};
 function groesse() {
+  const w = cv.clientWidth, h = cv.clientHeight;
+  if (!w || !h) return;                       // Layout noch nicht fertig
   B.dpr = Math.min(devicePixelRatio || 1, 2);
-  B.w = cv.clientWidth; B.h = cv.clientHeight;
-  cv.width = B.w * B.dpr; cv.height = B.h * B.dpr;
-  cx.setTransform(B.dpr, 0, 0, B.dpr, 0, 0);
+  B.w = w; B.h = h;
+  cv.width = Math.round(w * B.dpr);
+  cv.height = Math.round(h * B.dpr);
+  // Gerundete Pixel zurueckrechnen, sonst zieht das Bild in die Breite
+  B.sx = cv.width / w; B.sy = cv.height / h;
+  cx.setTransform(B.sx, 0, 0, B.sy, 0, 0);
 }
 addEventListener("resize", groesse);
+addEventListener("orientationchange", () => setTimeout(groesse, 150));
+if (window.visualViewport) visualViewport.addEventListener("resize", groesse);
+if (window.ResizeObserver) new ResizeObserver(groesse).observe(cv);
 
 const kam = {x:700, y:560, zoom:1};
 
@@ -1716,6 +1795,42 @@ function crewLeisteFrisch() {
   }
 }
 
+/* ---- Rufanzeige ---- */
+const rufBox = document.getElementById("rufanzeige");
+const rufPunkteEl = document.getElementById("rufPunkte");
+const rufSperreEl = document.getElementById("rufSperre");
+const rufPunkte = [...rufPunkteEl.querySelectorAll("i")];
+const rufTaste = document.getElementById("ruf");
+let zuckteBei = 0;
+
+function rufAnzeigeFrisch() {
+  const gesperrt = S.rufSperre > 0;
+  for (let i = 0; i < rufPunkte.length; i++) {
+    const v = (!gesperrt && i < S.rufe) ? "1" : "0";
+    if (rufPunkte[i].dataset.voll !== v) rufPunkte[i].dataset.voll = v;
+  }
+  rufPunkteEl.hidden = gesperrt;
+  rufSperreEl.hidden = !gesperrt;
+  if (gesperrt) {
+    const rest = Math.ceil(S.rufSperre);
+    const txt = `heiser · ${rest}s`;
+    if (rufSperreEl.textContent !== txt) rufSperreEl.textContent = txt;
+  }
+  const sp = gesperrt ? "1" : "0";
+  if (rufBox.dataset.sperre !== sp) rufBox.dataset.sperre = sp;
+  if (rufTaste.disabled !== gesperrt) {
+    rufTaste.disabled = gesperrt;
+    rufTaste.textContent = gesperrt ? "HEISER" : "RUFEN";
+  }
+  if (S.rufZucken > 0 && zuckteBei !== Math.round(S.rufZucken * 100)) {
+    if (!rufBox.classList.contains("zuck")) {
+      rufBox.classList.add("zuck");
+      setTimeout(() => rufBox.classList.remove("zuck"), 340);
+    }
+    zuckteBei = Math.round(S.rufZucken * 100);
+  }
+}
+
 /* ======================= Schleife ======================= */
 
 let letzte = 0;
@@ -1729,6 +1844,14 @@ function schleife(jetzt) {
   S.uhr += dt * 9;                       // Clubzeit vergeht schneller
   S.puls = Math.max(0, S.puls - dt * 3.6);
   S.rufKuehl = Math.max(0, S.rufKuehl - dt);
+  S.rufZucken = Math.max(0, S.rufZucken - dt);
+  if (S.rufSperre > 0) {
+    S.rufSperre = Math.max(0, S.rufSperre - dt);
+    if (S.rufSperre === 0) { S.rufe = RUF_MAX; S.rufeLade = 0; }
+  } else if (S.rufe < RUF_MAX) {
+    S.rufeLade += dt;
+    if (S.rufeLade >= RUF_NACH) { S.rufeLade = 0; S.rufe++; }
+  }
   S.wechsel = Math.max(0, S.wechsel - dt * 1.6);
 
   if (S.phase === "intro") {
@@ -1762,6 +1885,7 @@ function schleife(jetzt) {
   Ton.tick();
   rahmen(dt);
   crewLeisteFrisch();
+  rufAnzeigeFrisch();
 
   const st = Math.floor(S.uhr / 3600) % 24, mi = Math.floor(S.uhr / 60) % 60;
   document.getElementById("zeitAnzeige").textContent =
@@ -1769,6 +1893,7 @@ function schleife(jetzt) {
 }
 
 function rahmen(dt) {
+  if (cv.clientWidth !== B.w || cv.clientHeight !== B.h) groesse();
   cx.clearRect(0, 0, B.w, B.h);
   const bg = cx.createRadialGradient(B.w/2, B.h*0.35, 40, B.w/2, B.h*0.35, Math.max(B.w, B.h)*0.8);
   bg.addColorStop(0, "#241640"); bg.addColorStop(1, "#120b1e");
@@ -1900,11 +2025,12 @@ function karolineRiss(x, y, b, h, farbe) {
 }
 
 function introRahmen(dt) {
+  if (cv.clientWidth !== B.w || cv.clientHeight !== B.h) groesse();
   const T = S.introT, W = B.w, H = B.h, M = Math.min(W, H);
   const mx = W / 2, my = H * 0.44;
   const nacht = weich(spanne(T, 4.2, 5.5));
 
-  cx.setTransform(B.dpr, 0, 0, B.dpr, 0, 0);
+  cx.setTransform(B.sx, 0, 0, B.sy, 0, 0);
   cx.clearRect(0, 0, W, H);
   cx.save();
 
