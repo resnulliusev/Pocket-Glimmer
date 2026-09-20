@@ -1,3 +1,5 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Pocket Kosmos</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -45,7 +47,7 @@ body{
 /* ---------- HUD ---------- */
 #hud{position:absolute;inset:0;pointer-events:none;font-family:var(--ui);transition:opacity .55s}
 body[data-intro="1"] #hud{opacity:0}
-body[data-intro="1"] #touch{display:none}
+body[data-intro="1"][data-intro] #touch{display:none}
 .panel{
   background:linear-gradient(160deg,rgba(40,24,58,.92),rgba(24,14,38,.92));
   border:1.5px solid rgba(255,158,203,.34);
@@ -164,8 +166,8 @@ kbd{
 body[data-touch="1"] #touch{display:block}
 #stick{
   position:absolute;
-  left:calc(env(safe-area-inset-left,0px) + min(12vw,110px));
-  bottom:calc(env(safe-area-inset-bottom,0px) + 9vh);
+  left:calc(env(safe-area-inset-left,0px) + min(17vw,120px));
+  bottom:calc(env(safe-area-inset-bottom,0px) + 10vh);
   width:min(130px,31vw);height:min(130px,31vw);border-radius:50%;pointer-events:auto;
   background:radial-gradient(circle at 50% 42%,rgba(255,158,203,.16),rgba(255,158,203,.05));
   border:1.5px solid rgba(255,158,203,.3);
@@ -175,8 +177,8 @@ body[data-touch="1"] #touch{display:block}
   box-shadow:0 5px 14px rgba(0,0,0,.45)}
 #ruf{
   position:absolute;
-  right:calc(env(safe-area-inset-right,0px) + min(12vw,110px));
-  bottom:calc(env(safe-area-inset-bottom,0px) + 12vh);
+  right:calc(env(safe-area-inset-right,0px) + min(17vw,120px));
+  bottom:calc(env(safe-area-inset-bottom,0px) + 12.5vh);
   width:min(94px,23vw);height:min(94px,23vw);border-radius:50%;pointer-events:auto;
   background:radial-gradient(circle at 36% 30%,var(--plastik-hell),var(--plastik-tief));
   border:none;color:#3a0f2a;font-family:var(--disp);font-weight:800;
@@ -283,13 +285,28 @@ body[data-touch="1"] #touch{display:block}
   #uhr .meta{font-size:8.5px}
   #etage{padding:5px 10px;font-size:9.5px}
 
-  /* Ziel unter die obere Reihe, volle Breite */
-  #ziel{top:calc(env(safe-area-inset-top,0px) + 84px);max-width:90vw;padding:6px 13px 7px}
-  #ziel .t{font-size:13px}
+  /* Ziel klar unter die obere Reihe */
+  #ziel{top:calc(env(safe-area-inset-top,0px) + 106px);max-width:92vw;padding:5px 12px 6px}
+  #ziel .k{font-size:8px}
+  #ziel .t{font-size:12.5px;line-height:1.2}
 
   /* Text ueber die Daumen legen, nicht darunter */
-  #rede{bottom:calc(env(safe-area-inset-bottom,0px) + 34vh);max-width:90vw}
-  #rufanzeige{bottom:calc(env(safe-area-inset-bottom,0px) + 27vh)}
+  #rede{bottom:calc(env(safe-area-inset-bottom,0px) + 26vh);max-width:88vw;padding:9px 14px 10px}
+  #rede .was{font-size:13.5px;line-height:1.32}
+
+  /* Rufanzeige raus aus dem Spielfeld, hoch zur Etagenanzeige */
+  #rufanzeige{
+    left:auto;bottom:auto;transform:none;
+    right:max(14px,env(safe-area-inset-right,0px));
+    top:calc(env(safe-area-inset-top,0px) + 152px);
+    padding:6px 11px 7px;
+  }
+  #rufanzeige.zuck{animation:zuckRand .34s}
+  @keyframes zuckRand{
+    0%,100%{transform:none}
+    25%{transform:translateX(-7px)}
+    75%{transform:translateX(7px)}
+  }
   #tipp{display:none}
 }
 @media (prefers-reduced-motion:reduce){
@@ -604,6 +621,13 @@ stick.addEventListener("touchend", stickAus);
 stick.addEventListener("touchcancel", stickAus);
 document.getElementById("ruf").addEventListener("click", handeln);
 addEventListener("touchstart", () => document.body.dataset.touch = "1", {once:true});
+// Nicht auf die erste Beruehrung warten: Touchgeraete und schmale Schirme sofort erkennen
+function touchPruefen() {
+  const grob = window.matchMedia && matchMedia("(pointer: coarse)").matches;
+  if (grob || navigator.maxTouchPoints > 0 || innerWidth < 760) document.body.dataset.touch = "1";
+}
+touchPruefen();
+addEventListener("resize", touchPruefen);
 
 function richtung() {
   let dx = 0, dy = 0;
@@ -1029,6 +1053,19 @@ if (window.visualViewport) visualViewport.addEventListener("resize", groesse);
 if (window.ResizeObserver) new ResizeObserver(groesse).observe(cv);
 
 const kam = {x:700, y:560, zoom:1};
+
+// Wie weit reicht die Etage? Damit die Kamera nicht ins Leere schaut.
+const GRENZEN = {};
+function weltGrenzen(et) {
+  if (GRENZEN[et]) return GRENZEN[et];
+  let x1 = 1e9, y1 = 1e9, x2 = -1e9, y2 = -1e9;
+  for (const r of RAEUME) {
+    if (r.et !== et) continue;
+    x1 = Math.min(x1, r.x); y1 = Math.min(y1, r.y);
+    x2 = Math.max(x2, r.x + r.w); y2 = Math.max(y2, r.y + r.h);
+  }
+  return (GRENZEN[et] = {x1: x1 - 70, y1: y1 - 80, x2: x2 + 70, y2: y2 + 60});
+}
 
 function rundRect(c, x, y, w, h, r) {
   const rr = Math.min(r, w/2, h/2);
@@ -1900,10 +1937,24 @@ function rahmen(dt) {
   cx.fillStyle = bg; cx.fillRect(0, 0, B.w, B.h);
   if (!S.spieler) return;
 
-  const zoom = Math.max(0.62, Math.min(1.35, Math.min(B.w / 980, B.h / 640)));
+  const schmal = B.w < 760;
+  const g = weltGrenzen(S.etage);
+  // So weit heranfahren, dass die Etage die Hoehe fuellt — kein Schwarz mehr unten
+  const fuellt = (B.h / (g.y2 - g.y1)) * (schmal ? 1.15 : 1);
+  const basis = schmal ? B.w / 430 : Math.min(B.w / 980, B.h / 620);
+  const zoom = Math.max(0.7, Math.min(schmal ? 1.9 : 1.5, Math.max(basis, fuellt)));
   kam.zoom += (zoom - kam.zoom) * 0.1;
-  kam.x += (S.spieler.x - kam.x) * Math.min(1, dt * 5.5);
-  kam.y += (S.spieler.y - kam.y) * Math.min(1, dt * 5.5);
+
+  const hw = B.w / (2 * kam.zoom), hh = B.h / (2 * kam.zoom);
+  let zx = S.spieler.x, zy = S.spieler.y;
+  // Am Telefon die Figur ueber die Mitte setzen, damit die Daumen sie nicht verdecken
+  if (schmal) zy += (B.h * 0.13) / kam.zoom;
+  const luft = schmal ? (B.h * 0.20) / kam.zoom : 0;   // Spielraum unter der Strasse
+  const uy2 = g.y2 + luft;
+  zx = (g.x2 - g.x1) > hw*2 ? Math.max(g.x1 + hw, Math.min(g.x2 - hw, zx)) : (g.x1 + g.x2) / 2;
+  zy = (uy2 - g.y1) > hh*2 ? Math.max(g.y1 + hh, Math.min(uy2 - hh, zy)) : (g.y1 + uy2) / 2;
+  kam.x += (zx - kam.x) * Math.min(1, dt * 5.5);
+  kam.y += (zy - kam.y) * Math.min(1, dt * 5.5);
 
   cx.save();
   cx.translate(B.w/2, B.h/2);
