@@ -300,6 +300,30 @@ body[data-touch="1"] #touch{display:block}
 .bestenliste .vl{color:var(--gold);flex:none;font-variant-numeric:tabular-nums;width:34px;text-align:right}
 .hinweis{font-family:var(--mono);font-size:9px;letter-spacing:.06em;color:var(--grau);
   margin:10px 0 0;opacity:.75;line-height:1.5}
+
+#sendestatus{
+  font-family:var(--mono);font-size:10px;letter-spacing:.08em;margin:9px 0 0;
+  color:var(--grau);line-height:1.6;
+}
+#sendestatus.ok{color:var(--mint)}
+#sendestatus.fehler{color:var(--gold)}
+#sendestatus a{color:var(--plastik-hell)}
+
+#teilen{margin-top:14px}
+#teilenBtn{
+  cursor:pointer;border:none;border-radius:11px;padding:11px 22px;
+  font-family:var(--disp);font-weight:800;font-size:14px;color:#0e2a20;
+  background:linear-gradient(170deg,#a9f7d2,#4fd4a0);
+  box-shadow:0 4px 0 #2f9a72;
+}
+#teilenBtn:active{transform:translateY(2px);box-shadow:0 2px 0 #2f9a72}
+#teilenBtn:focus-visible{outline:3px solid var(--volt);outline-offset:2px}
+#teilenText{
+  width:100%;max-width:330px;margin:9px auto 0;display:block;resize:none;
+  padding:9px 11px;border-radius:10px;border:1.5px solid rgba(255,158,203,.35);
+  background:rgba(20,12,30,.7);color:var(--sahne);
+  font-family:var(--mono);font-size:10.5px;line-height:1.5;
+}
 .bilanz{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin-top:18px}
 .bilanz div{font-family:var(--mono);font-size:11px;color:var(--grau);letter-spacing:.06em}
 .bilanz b{display:block;font-size:20px;color:var(--volt);font-weight:500;margin-top:3px;
@@ -451,6 +475,14 @@ body[data-touch="1"] #touch{display:block}
       <p class="bandkopf" id="listeKopf" hidden>Bestenliste · die schnellsten zehn</p>
       <ol class="bestenliste" id="bestenliste" hidden></ol>
       <p class="hinweis" id="listeHinweis" hidden></p>
+
+      <p id="sendestatus" hidden></p>
+
+      <div id="teilen" hidden>
+        <button id="teilenBtn" type="button">Ergebnis teilen</button>
+        <p class="hinweis" id="teilenHinweis" hidden></p>
+        <textarea id="teilenText" rows="4" readonly hidden></textarea>
+      </div>
 
       <div class="bilanz">
         <div>Gebraucht<b id="statZeit">–</b></div>
@@ -969,6 +1001,10 @@ function gewonnen() {
   S.letzterCode = `GLM·0210·${zeit}`;
   document.getElementById("eintrag").hidden = false;
   document.getElementById("listeHinweis").hidden = true;
+  document.getElementById("teilen").hidden = true;
+  document.getElementById("sendestatus").hidden = true;
+  document.getElementById("teilenHinweis").hidden = true;
+  document.getElementById("teilenText").hidden = true;
   document.getElementById("instaFeld").value = "";
   listeZeigen(null);
   document.getElementById("ende").hidden = false;
@@ -2287,6 +2323,80 @@ function listeZeigen(hervor) {
   }
 }
 
+const SPIEL_URL = "https://resnulliusev.github.io/Pocket-Glimmer/";
+
+/* Google-Formular von Res Nullius. Zwei Felder: Insta und Zeit. */
+const FORM_ID    = "1FAIpQLSflIwbexLo4HvMC2kHWo2kz_Xi6OF9DF3dVFVoJ2ecPwNMlwg";
+const FORM_POST  = `https://docs.google.com/forms/d/e/${FORM_ID}/formResponse`;
+const FORM_VIEW  = `https://docs.google.com/forms/d/e/${FORM_ID}/viewform`;
+const FELD_INSTA = "entry.1621620378";
+const FELD_ZEIT  = "entry.331747020";
+
+function zeitText(sek) {
+  return `${Math.floor(sek / 60)}:${String(sek % 60).padStart(2, "0")}`;
+}
+
+function formularLink(handle) {
+  const u = new URL(FORM_VIEW);
+  u.searchParams.set("usp", "pp_url");
+  u.searchParams.set(FELD_INSTA, "@" + handle);
+  u.searchParams.set(FELD_ZEIT, zeitText(S.letzteZeit));
+  return u.toString();
+}
+
+// Absenden über ein verstecktes Formular in einem unsichtbaren Rahmen.
+// Kein fetch: das wird von manchen Seiten blockiert, eine Formularabsendung nicht.
+// Vorteil obendrein: der Rahmen meldet, wenn Google geantwortet hat.
+function anFormularSchicken(handle) {
+  const st = document.getElementById("sendestatus");
+  st.hidden = false; st.className = ""; st.textContent = "Wird an die Bestenliste geschickt …";
+
+  let rahmen = document.getElementById("formZiel");
+  if (!rahmen) {
+    rahmen = document.createElement("iframe");
+    rahmen.id = "formZiel"; rahmen.name = "formZiel";
+    rahmen.setAttribute("aria-hidden", "true");
+    rahmen.style.cssText = "position:absolute;width:0;height:0;border:0;opacity:0;pointer-events:none";
+    document.body.appendChild(rahmen);
+  }
+
+  const f = document.createElement("form");
+  f.action = FORM_POST; f.method = "POST"; f.target = "formZiel";
+  f.style.display = "none";
+  const feld = (name, wert) => {
+    const i = document.createElement("input");
+    i.type = "hidden"; i.name = name; i.value = wert;
+    f.appendChild(i);
+  };
+  feld(FELD_INSTA, "@" + handle);
+  feld(FELD_ZEIT, zeitText(S.letzteZeit));
+  document.body.appendChild(f);
+
+  let fertig = false;
+  const gelungen = () => {
+    if (fertig) return; fertig = true;
+    st.className = "ok";
+    st.textContent = "Abgeschickt. Danke!";
+  };
+  const gescheitert = () => {
+    if (fertig) return; fertig = true;
+    st.className = "fehler";
+    st.textContent = "";
+    const a = document.createElement("a");
+    a.href = formularLink(handle);
+    a.target = "_blank"; a.rel = "noopener noreferrer";
+    a.textContent = "Konnte nicht senden — hier eintragen";
+    st.appendChild(a);
+  };
+
+  rahmen.addEventListener("load", gelungen, {once: true});
+  try { f.submit(); } catch (e) { gescheitert(); }
+  f.remove();
+  setTimeout(gescheitert, 8000);   // antwortet nichts, war es blockiert
+}
+
+document.getElementById("teilenBtn").addEventListener("click", ergebnisTeilen);
+
 function eintragen() {
   const feld = document.getElementById("instaFeld");
   const handle = feld.value.trim()
@@ -2300,7 +2410,10 @@ function eintragen() {
   arr.push({id, handle, sek: S.letzteZeit, verloren: S.verloren, code: S.letzterCode});
   const ok = listeSchreiben(arr);
   document.getElementById("eintrag").hidden = true;
+  S.teilenText = teilenText(handle);
+  document.getElementById("teilen").hidden = false;
   listeZeigen(id);
+  anFormularSchicken(handle);
   const hw = document.getElementById("listeHinweis");
   hw.hidden = false;
   hw.textContent = ok
@@ -2392,8 +2505,8 @@ function rahmen(dt) {
   const g = weltGrenzen(S.etage);
   // So weit heranfahren, dass die Etage die Hoehe fuellt — kein Schwarz mehr unten
   const fuellt = (B.h / (g.y2 - g.y1)) * (schmal ? 1.15 : 1);
-  const basis = schmal ? B.w / 430 : Math.min(B.w / 980, B.h / 620);
-  const zoom = Math.max(0.7, Math.min(schmal ? 1.9 : 1.5, Math.max(basis, fuellt)));
+  const basis = schmal ? B.w / 430 : Math.min(B.w / 620, B.h / 430);
+  const zoom = Math.max(0.7, Math.min(schmal ? 1.9 : 2.4, Math.max(basis, fuellt)));
   kam.zoom += (zoom - kam.zoom) * 0.1;
 
   const hw = B.w / (2 * kam.zoom), hh = B.h / (2 * kam.zoom);
