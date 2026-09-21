@@ -307,7 +307,12 @@ body[data-touch="1"] #touch{display:block}
 }
 #sendestatus.ok{color:var(--mint)}
 #sendestatus.fehler{color:var(--gold)}
-#sendestatus a{color:var(--plastik-hell)}
+#sendestatus button{
+  cursor:pointer;border:none;border-radius:8px;padding:5px 11px;margin-left:4px;
+  font-family:var(--mono);font-size:10px;letter-spacing:.06em;color:#3d0f2b;
+  background:linear-gradient(170deg,var(--plastik-hell),var(--plastik-tief));
+}
+#sendestatus button:focus-visible{outline:2px solid var(--volt);outline-offset:2px}
 
 #teilen{margin-top:14px}
 #teilenBtn{
@@ -2328,20 +2333,11 @@ const SPIEL_URL = "https://resnulliusev.github.io/Pocket-Glimmer/";
 /* Google-Formular von Res Nullius. Zwei Felder: Insta und Zeit. */
 const FORM_ID    = "1FAIpQLSflIwbexLo4HvMC2kHWo2kz_Xi6OF9DF3dVFVoJ2ecPwNMlwg";
 const FORM_POST  = `https://docs.google.com/forms/d/e/${FORM_ID}/formResponse`;
-const FORM_VIEW  = `https://docs.google.com/forms/d/e/${FORM_ID}/viewform`;
 const FELD_INSTA = "entry.1621620378";
 const FELD_ZEIT  = "entry.331747020";
 
 function zeitText(sek) {
   return `${Math.floor(sek / 60)}:${String(sek % 60).padStart(2, "0")}`;
-}
-
-function formularLink(handle) {
-  const u = new URL(FORM_VIEW);
-  u.searchParams.set("usp", "pp_url");
-  u.searchParams.set(FELD_INSTA, "@" + handle);
-  u.searchParams.set(FELD_ZEIT, zeitText(S.letzteZeit));
-  return u.toString();
 }
 
 // Absenden über ein verstecktes Formular in einem unsichtbaren Rahmen.
@@ -2381,12 +2377,11 @@ function anFormularSchicken(handle) {
   const gescheitert = () => {
     if (fertig) return; fertig = true;
     st.className = "fehler";
-    st.textContent = "";
-    const a = document.createElement("a");
-    a.href = formularLink(handle);
-    a.target = "_blank"; a.rel = "noopener noreferrer";
-    a.textContent = "Konnte nicht senden — hier eintragen";
-    st.appendChild(a);
+    st.textContent = "Das hat gerade nicht geklappt — deine Zeit ist nicht in der Bestenliste gelandet. ";
+    const b = document.createElement("button");
+    b.type = "button"; b.id = "nochmalSenden"; b.textContent = "Nochmal senden";
+    b.addEventListener("click", () => { b.remove(); anFormularSchicken(handle); }, {once: true});
+    st.appendChild(b);
   };
 
   rahmen.addEventListener("load", gelungen, {once: true});
