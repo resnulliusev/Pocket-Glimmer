@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Pocket Kosmos</title>
+<title>Pocket Glimmer</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Instrument+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap">
@@ -319,25 +319,25 @@ body[data-touch="1"] #touch{display:block}
 
   <div id="hud">
     <div id="obenLinks">
-      <div class="panel" id="marke"><b>POCKET KOSMOS</b><span>Karolinenstr. 45</span></div>
+      <div class="panel" id="marke"><b>POCKET GLIMMER</b><span>Stockmeyerstr. 43</span></div>
       <div class="panel" id="crew"><h3>Deine Gruppe</h3></div>
     </div>
 
     <div id="obenRechts">
       <div class="panel" id="uhr">
         <div class="zeit" id="zeitAnzeige">23:14</div>
-        <div class="meta">RES-TLESS · 140 BPM</div>
+        <div class="meta">ERÖFFNUNG · 140 BPM</div>
       </div>
-      <div class="panel" id="etage">Erdgeschoss</div>
+      <div class="panel" id="etage">Entrance</div>
       <div class="panel" id="kartewrap">
         <canvas id="karte" width="180" height="104"></canvas>
-        <div class="kbez" id="karteBez">Grundriss EG</div>
+        <div class="kbez" id="karteBez">Grundriss</div>
       </div>
     </div>
 
     <div class="panel" id="ziel">
       <div class="k">Ziel</div>
-      <div class="t" id="zielText">Sammle deine Leute auf der Karolinenstraße ein</div>
+      <div class="t" id="zielText">Sammle deine Leute auf der Stockmeyerstraße ein</div>
     </div>
 
     <div class="panel" id="rede">
@@ -362,23 +362,24 @@ body[data-touch="1"] #touch{display:block}
   <div id="deckel">
     <div class="dose">
       <div class="scharnier"><i></i><i></i><i></i></div>
-      <h1>Pocket Kosmos</h1>
-      <p class="unter">Karolinenstraße 45 · Hamburg · 19.09.2026 · 23:14</p>
+      <h1>Pocket Glimmer</h1>
+      <p class="unter">Stockmeyerstraße 43 · Oberhafen · 02.10.2026 · 23:14</p>
       <p class="fliess">
-        Die Karoline ist ein neugotischer Klinkerbau von 1890, früher die Verwaltung eines
-        Kohlekraftwerks. Heute Nacht ist sie eine Puderdose: Klappe auf, und darin läuft RES-TLESS
-        auf drei Floors.
+        Das glimmer sitzt in einem alten Klinkerbau im Oberhafen — Backstein, Rundbogentore,
+        von oben bis unten besprüht. 548 Quadratmeter, vorher hieß der Laden hier Moloch.
+        Heute ist Eröffnung. Und heute Nacht ist das Haus eine Puderdose.
       </p>
       <p class="fliess">
-        Du bist Polly. Vier Freundinnen stehen noch verstreut auf der Straße, jede mit Jacke.
-        Bringt sie alle heil bis zur Garderobe im LOFT — erste Etage, hinten rechts.
-        Das Problem: zwischen Tür und Garderobe liegen Club&nbsp;1, Club&nbsp;2 und VOLT.
+        Du bist Polly. Ihr wollt ins Backstage. Der Weg dahin geht so: Jacken in die
+        Lockers, dann jemanden auf den Toiletten fragen. Die schickt euch weiter zu
+        jemandem mit einer <b>roten Jacke</b> — irgendwo auf den Floors.
+        <b>Ihr wisst nicht, wer das ist.</b>
       </p>
       <div class="zettel">
         <b>WASD</b> oder Pfeiltasten — laufen<br>
-        <b>E</b> oder Leertaste — rufen, wenn jemand hängenbleibt<br>
+        <b>E</b> oder Leertaste — rufen, reden, Jacken abgeben<br>
         Nur <b>zwei Rufe hintereinander</b>. Wer weiterdrückt, ist 10 Sekunden heiser.<br>
-        <b>E</b> am Tresen — Jacken abgeben<br>
+        <b>E</b> an den Lockers — Jacken abgeben<br>
         Auf dem Floor halten sie es keine drei Sekunden aus — ruf sie zurueck,<br>
         bevor die Gruppe auseinanderfaellt.
       </div>
@@ -413,78 +414,92 @@ const mapCx = mapCv.getContext("2d");
 const sanft = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 /* =======================================================================
-   GRUNDRISS — nachgebaut aus dem 360°-Rundgang der Karoline.
-   Erdgeschoss:  Club 2 · Treppenhaus · Club 1 · Foyer · Café · Außenbereich
-   1. Obergeschoss: Wintergarten · VOLT · Treppenhaus · Flur · LOFT
+   GRUNDRISS — nachgebaut aus dem Plan des glimmer, Stockmeyerstraße 43.
+   Eine Ebene: Entrance · Lockers · Hallway · Chill Area · Toiletten ·
+   Bar Area · Second Floor · Main Floor · Backstage
    ======================================================================= */
 
 const RAEUME = [
-  // --- Erdgeschoss ---
-  {id:"club2", et:0, x:80,  y:90,  w:420, h:230, name:"Club 2",           art:"club",   ton:"#b06cff", filter:15000},
-  {id:"trepEG",et:0, x:500, y:120, w:120, h:170, name:"Treppenhaus",      art:"treppe", ton:"#7e6a9c", filter:2600},
-  {id:"club1", et:0, x:620, y:90,  w:440, h:230, name:"Club 1",           art:"club",   ton:"#5f8cff", filter:19000},
-  {id:"foyer", et:0, x:1060,y:150, w:200, h:170, name:"Foyer",            art:"innen",  ton:"#8f7ab0", filter:1700},
-  {id:"cafe",  et:0, x:1260,y:90,  w:240, h:230, name:"Café",             art:"innen",  ton:"#ffb86b", filter:1200},
-  {id:"aussen",et:0, x:1500,y:90,  w:270, h:262, name:"Außenbereich",     art:"drau",   ton:"#6f5f86", filter:700},
-  {id:"vorpl", et:0, x:900, y:330, w:700, h:190, name:"Vorplatz",         art:"drau",   ton:"#5c4e73", filter:520},
-  {id:"gehweg",et:0, x:260, y:430, w:640, h:90,  name:"Gehweg",           art:"strasse",ton:"#4e4266", filter:340},
-  {id:"str",   et:0, x:260, y:520, w:1460,h:130, name:"Karolinenstraße",  art:"strasse",ton:"#463b5c", filter:300},
-  // --- 1. Obergeschoss ---
-  {id:"winter",et:1, x:80,  y:110, w:130, h:200, name:"Wintergarten",     art:"innen",  ton:"#9ff5c4", filter:1500},
-  {id:"volt",  et:1, x:210, y:90,  w:400, h:230, name:"VOLT",             art:"club",   ton:"#3ef1e4", filter:17000},
-  {id:"trepOG",et:1, x:610, y:120, w:120, h:170, name:"Treppenhaus",      art:"treppe", ton:"#7e6a9c", filter:2600},
-  {id:"flur",  et:1, x:730, y:150, w:470, h:95,  name:"Flur",             art:"innen",  ton:"#8f7ab0", filter:1300},
-  {id:"loft",  et:1, x:1060,y:245, w:420, h:225, name:"LOFT",             art:"loft",   ton:"#ffd76e", filter:900},
+  // --- glimmer, alles auf einer Ebene. Nach dem Grundriss von Niki. ---
+  {id:"wc",     et:0, x:40,   y:100, w:250, h:420, name:"Toiletten",        art:"innen",  ton:"#9ff5c4", filter:800},
+  {id:"chill",  et:0, x:300,  y:95,  w:230, h:155, name:"Chill Area",       art:"innen",  ton:"#ffb86b", filter:1300},
+  {id:"flur",   et:0, x:300,  y:250, w:405, h:130, name:"Hallway",          art:"innen",  ton:"#8f7ab0", filter:1700},
+  {id:"lockers",et:0, x:425,  y:385, w:280, h:120, name:"Lockers",          art:"innen",  ton:"#ffd76e", filter:1200},
+  {id:"eingang",et:0, x:548,  y:505, w:155, h:155, name:"Entrance",         art:"innen",  ton:"#ffd76e", filter:700},
+  {id:"bar",    et:0, x:705,  y:70,  w:385, h:175, name:"Bar Area",         art:"innen",  ton:"#ffb86b", filter:3000},
+  {id:"barsued",et:0, x:705,  y:245, w:185, h:85,  name:"Bar Area",         art:"innen",  ton:"#ffb86b", filter:3200},
+  {id:"schleuse",et:0,x:890,  y:245, w:200, h:85,  name:"Schleuse",         art:"treppe", ton:"#8f7ab0", filter:7000},
+  {id:"second", et:0, x:705,  y:334, w:310, h:126, name:"Second Floor",     art:"club",   ton:"#5f8cff", filter:16000},
+  {id:"main",   et:0, x:1094, y:65,  w:466, h:375, name:"Main Floor",       art:"club",   ton:"#b06cff", filter:19000},
+  {id:"backstage",et:0,x:1565,y:80,  w:120, h:185, name:"Backstage",        art:"loft",   ton:"#6cf5b4", filter:600},
+  {id:"vorplatz",et:0, x:719, y:505, w:280, h:160, name:"Vorplatz",         art:"drau",   ton:"#5c4e73", filter:520},
+  {id:"str",    et:0, x:620,  y:655, w:900, h:125, name:"Stockmeyerstraße", art:"strasse",ton:"#463b5c", filter:300},
 ];
 const R = Object.fromEntries(RAEUME.map(r => [r.id, r]));
 
 // Türen sind selbst begehbar und schneiden die Wand auf.
 const TUEREN = [
-  {et:0, x:488, y:180, w:44, h:62},   // Club 2 → Treppenhaus
-  {et:0, x:608, y:180, w:44, h:62},   // Treppenhaus → Club 1
-  {et:0, x:1048,y:198, w:44, h:62},   // Club 1 → Foyer
-  {et:0, x:1248,y:198, w:44, h:62},   // Foyer → Café
-  {et:0, x:1488,y:198, w:44, h:62},   // Café → Außenbereich
-  {et:0, x:1118,y:308, w:84, h:34, haupt:true}, // Haupteingang
-  {et:0, x:1512,y:340, w:84, h:26},   // Außenbereich → Vorplatz
-  {et:1, x:198, y:180, w:44, h:62},   // Wintergarten → VOLT
-  {et:1, x:598, y:180, w:44, h:62},   // VOLT → Treppenhaus
-  {et:1, x:718, y:176, w:44, h:52},   // Treppenhaus → Flur
-  {et:1, x:1098,y:234, w:86, h:26},   // Flur → LOFT
+  {et:0, x:691,  y:556, w:36, h:74, haupt:true},  // Vorplatz → Entrance, Ostseite
+  {et:0, x:560,  y:493, w:90, h:24},              // Entrance → Lockers
+  {et:0, x:560,  y:373, w:90, h:24},              // Lockers → Hallway
+  {et:0, x:340,  y:240, w:140, h:24},             // Hallway → Chill Area
+  {et:0, x:286,  y:288, w:26, h:66},              // Hallway → Toiletten
+  {et:0, x:694,  y:258, w:24, h:54},              // Hallway → Bar Area
+  {et:0, x:705,  y:236, w:185, h:20},             // Bar Area → Bar Area Süd, offen
+  {et:0, x:905,  y:236, w:60,  h:20},             // Bar Area → Schleuse
+  {et:0, x:1080, y:280, w:30,  h:44},             // Schleuse → Main Floor
+  {et:0, x:760,  y:322, w:100, h:24},             // Bar Area Süd → Second Floor
+  {et:0, x:1552, y:135, w:26, h:70, backst:true}, // Main Floor → Backstage
 ];
 
 // Feste Einbauten: blockieren und werden als Möbel gezeichnet.
 const MOEBEL = [
-  {et:0, x:786, y:96,  w:134,h:42,  typ:"dj",   raum:"club1"},
-  {et:0, x:742, y:96,  w:36, h:50,  typ:"box"},
-  {et:0, x:928, y:96,  w:36, h:50,  typ:"box"},
-  {et:0, x:642, y:268, w:160,h:34,  typ:"tresen"},
-  {et:0, x:96,  y:170, w:42, h:120, typ:"djq",  raum:"club2"},
-  {et:0, x:300, y:96,  w:160,h:32,  typ:"tresen"},
-  {et:0, x:1282,y:96,  w:200,h:38,  typ:"tresen"},
-  {et:0, x:1300,y:250, w:46, h:46,  typ:"tisch"},
-  {et:0, x:1396,y:250, w:46, h:46,  typ:"tisch"},
-  {et:0, x:1076,y:158, w:118,h:34,  typ:"kasse"},
-  {et:0, x:1546,y:112, w:120,h:40,  typ:"wagen"},
-  {et:0, x:1700,y:250, w:46, h:80,  typ:"beet"},
-  {et:1, x:336, y:96,  w:134,h:42,  typ:"dj",   raum:"volt"},
-  {et:1, x:292, y:96,  w:36, h:50,  typ:"box"},
-  {et:1, x:478, y:96,  w:36, h:50,  typ:"box"},
-  {et:1, x:96,  y:126, w:38, h:64,  typ:"beet"},
-  {et:1, x:96,  y:228, w:38, h:64,  typ:"beet"},
-  {et:1, x:1096,y:262, w:348,h:40,  typ:"buegel"},
-  {et:1, x:1096,y:334, w:348,h:40,  typ:"garderobe"},
+  // Toiletten: einzelne Kabinen, Waschbecken, rollstuhlgerechtes WC
+  {et:0, x:46,   y:116, w:52,  h:40,  typ:"kabine"},
+  {et:0, x:46,   y:164, w:52,  h:40,  typ:"kabine"},
+  {et:0, x:46,   y:212, w:52,  h:40,  typ:"kabine"},
+  {et:0, x:46,   y:300, w:52,  h:40,  typ:"kabine"},
+  {et:0, x:46,   y:348, w:52,  h:40,  typ:"kabine"},
+  {et:0, x:46,   y:396, w:52,  h:40,  typ:"kabine"},
+  {et:0, x:186,  y:130, w:92,  h:28,  typ:"becken"},
+  {et:0, x:176,  y:424, w:100, h:76,  typ:"accwc"},
+  // Flur: Awareness-Counter
+  {et:0, x:340,  y:330, w:92,  h:26,  typ:"kasse"},
+  // Chill Area: Sofas rundherum
+  {et:0, x:312,  y:104, w:84,  h:28,  typ:"sofa"},
+  {et:0, x:446,  y:104, w:72,  h:28,  typ:"sofa"},
+  {et:0, x:306,  y:150, w:28,  h:82,  typ:"sofa"},
+  {et:0, x:496,  y:150, w:28,  h:82,  typ:"sofa"},
+  {et:0, x:338,  y:158, w:40,  h:32,  typ:"tisch"},
+  {et:0, x:452,  y:158, w:40,  h:32,  typ:"tisch"},
+  // Lockers: Schrankreihen
+  {et:0, x:434,  y:396, w:110, h:30,  typ:"locker"},
+  {et:0, x:434,  y:452, w:110, h:30,  typ:"locker"},
+  {et:0, x:662,  y:396, w:38,  h:86,  typ:"locker"},
+  // Entrance: Ticket Counter
+  {et:0, x:556,  y:544, w:28,  h:96,  typ:"kasse"},
+  // Bar Area: Main Bar und Second Bar
+  {et:0, x:716,  y:110, w:34,  h:126, typ:"tresen"},
+  {et:0, x:958,  y:80,  w:122, h:32,  typ:"tresen"},
+  {et:0, x:1102, y:150, w:78,  h:62,  typ:"foh"},
+  {et:0, x:985,  y:245, w:20,  h:56,  typ:"wand"},
+  // Main Floor: Kanzel an der Ostwand
+  {et:0, x:1498, y:215, w:44,  h:120, typ:"djq", raum:"main"},
+  {et:0, x:1500, y:88,  w:40,  h:56,  typ:"box"},
+  {et:0, x:1500, y:352, w:40,  h:56,  typ:"box"},
+  // Second Floor: kleine Kanzel
+  {et:0, x:714,  y:352, w:34,  h:94,  typ:"djq", raum:"second"},
+  {et:0, x:958,  y:352, w:34,  h:56,  typ:"box"},
+  // Backstage
+  {et:0, x:1576, y:96,  w:96,  h:28,  typ:"sofa"},
+  {et:0, x:1576, y:226, w:96,  h:28,  typ:"sofa"},
 ];
 
-const TRESEN = {x:1096, y:334, w:348, h:40};   // Garderobentresen im LOFT
-const ANNAHME = {x:1270, y:398};               // davor: hier wird abgegeben
-const TREPPE_EG = {x:560, y:205};
-const TREPPE_OG = {x:670, y:205};
-const TUERSTEHER = {x:1160, y:372};
-const RUF_MAX = 2;       // zwei Rufe hintereinander
-const RUF_NACH = 4.5;    // Sekunden, bis einer nachwaechst
-const RUF_SPERRE = 10;   // Sekunden heiser, wenn man es uebertreibt
-const SCHLANGE_PLAETZE = [[1148,408],[1176,434],[1144,460],[1178,486],[1150,512]];
+const LOCKERBANK    = {x:565, y:437};   // davor werden die Jacken abgegeben
+const KLOPERSON_POS = {x:230, y:212};   // steht zwischen Waschbecken und Kabinen
+const BACKSTAGETUER = {x:1566, y:170};
+const TUERSTEHER    = {x:762, y:592};
+const SCHLANGE_PLAETZE = [[798,596],[830,622],[792,648],[834,676],[800,702]];
 const MECKER = [
   "Hey! Hinten anstellen.",
   "Hey — wir stehen hier seit halb zwoelf.",
@@ -492,6 +507,9 @@ const MECKER = [
   "Hey. Ernsthaft jetzt?",
   "Hey! Nicht vordraengeln.",
 ];
+const RUF_MAX = 2;
+const RUF_NACH = 4.5;
+const RUF_SPERRE = 10;
 
 const BEGEHBAR = [...RAEUME, ...TUEREN.map(t => ({...t, tuer:true}))];
 
@@ -531,12 +549,12 @@ function neueFigur(def, x, y, spielbar) {
 }
 
 function aufstellen() {
-  S.spieler = neueFigur(CREW[0], 700, 588, true);
+  S.spieler = neueFigur(CREW[0], 980, 722, true);
   S.gruppe = [
-    neueFigur(CREW[1], 470, 556),
-    neueFigur(CREW[2], 1010, 470),
-    neueFigur(CREW[3], 1290, 506),
-    neueFigur(CREW[4], 372, 462),
+    neueFigur(CREW[1], 730, 700),
+    neueFigur(CREW[2], 1180, 748),
+    neueFigur(CREW[3], 1360, 706),
+    neueFigur(CREW[4], 1060, 758),
   ];
   S.spur = []; S.npcs = []; S.funken = [];
   S.verloren = 0; S.abgegeben = 0; S.etage = 0; S.abgabeLaeuft = false; S.imClub = false;
@@ -545,6 +563,7 @@ function aufstellen() {
   S.phase = "sammeln"; S.startZeit = performance.now();
   for (let i=0;i<5;i++) gruppeSpawnen(true);
   schlangeBauen();
+  questLeuteBauen();
   crewLeisteBauen();
 }
 
@@ -567,9 +586,13 @@ function blockiert(x, y, et, rad) {
     const ny = Math.max(m.y, Math.min(y, m.y + m.h));
     if ((x-nx)**2 + (y-ny)**2 < rad*rad) return true;
   }
-  if (S.phase === "sammeln" && et === 0) {           // Türsteher lässt noch niemanden rein
+  if (S.phase === "sammeln") {                      // Türsteher lässt noch niemanden rein
     const t = TUEREN.find(t => t.haupt);
-    if (y < t.y + t.h + 12 && y > t.y - 20 && x > t.x - 30 && x < t.x + t.w + 30) return true;
+    if (y < t.y + t.h + 14 && y > t.y - 22 && x > t.x - 30 && x < t.x + t.w + 30) return true;
+  }
+  if (S.phase !== "backstage" && S.phase !== "fertig") {   // Backstage bleibt zu
+    const t = TUEREN.find(t => t.backst);
+    if (x > t.x - 16 && x < t.x + t.w + 26 && y > t.y - 24 && y < t.y + t.h + 24) return true;
   }
   return false;
 }
@@ -645,19 +668,43 @@ function richtung() {
 function handeln() {
   if (S.phase === "start" || S.phase === "intro" || S.phase === "fertig") return;
   const p = S.spieler;
+  const alleDa = S.gruppe.every(g => g.dabei);
 
-  // Die Jackenabgabe haengt nicht an der Stimme, die geht immer
-  if (S.phase === "garderobe" && S.etage === 1) {
-    const nah = Math.hypot(p.x - ANNAHME.x, p.y - ANNAHME.y) < 62;
-    if (nah && S.gruppe.every(g => g.dabei)) { abgabeStarten(); return; }
-    if (nah) { sagen("Garderobe", "Erst alle fuenf. Ich zaehle mit."); return; }
+  // Jacken in die Lockers
+  if (S.phase === "jacken" && Math.hypot(p.x - LOCKERBANK.x, p.y - LOCKERBANK.y) < 62) {
+    if (alleDa) { lockersAbgeben(); return; }
+    sagen("Polly", "Erst alle fünf. Ohne die anderen fange ich nicht an.", 2.6); return;
+  }
+
+  // Die auf dem Klo fragen
+  if (S.phase === "klo" && S.klo &&
+      Math.hypot(p.x - S.klo.x, p.y - S.klo.y) < 66) {
+    if (!alleDa) { sagen("Polly", "Erst alle fünf herholen.", 2.2); return; }
+    S.klo.gefragt = true; S.klo.sagt = 3.4;
+    S.phase = "suche";
+    sagen("Polly", "Wir wollen ins Backstage. Weißt du, wie?", 2.6);
+    sagen("Unbekannte", "Nicht von mir. Fragt die mit der roten Jacke.", 3.0);
+    sagen("Polly", "Welche rote Jacke?", 1.8);
+    sagen("Unbekannte", "Die Einzige, die ihre noch anhat. Irgendwo auf den Floors.", 3.6);
+    return;
+  }
+
+  // Die mit der roten Jacke ansprechen
+  if (S.phase === "suche" && S.rot &&
+      Math.hypot(p.x - S.rot.x, p.y - S.rot.y) < 60) {
+    if (!alleDa) { sagen("Polly", "Moment — nicht ohne die anderen.", 2.2); return; }
+    S.rot.gefragt = true; S.rot.sagt = 3.0;
+    S.phase = "backstage";
+    sagen("Polly", "Bist du die mit der roten Jacke?", 2.2);
+    sagen("Rote Jacke", "Bin ich. Und ihr seid zu fünft und ziemlich laut.", 3.0);
+    sagen("Rote Jacke", "Hintere Tür rechts vom Floor. Sagt, Nuri schickt euch.", 3.4);
+    return;
   }
 
   // Heiser: gar nichts geht
   if (S.rufSperre > 0) { S.rufZucken = 0.34; return; }
   if (S.rufKuehl > 0) return;
 
-  // Keine Rufe mehr uebrig und trotzdem gedrueckt — selbst schuld
   if (S.rufe <= 0) {
     S.rufSperre = RUF_SPERRE; S.rufZucken = 0.34;
     sagen("Polly", "Jetzt ist die Stimme weg. Einmal durchatmen.", 2.8);
@@ -676,7 +723,7 @@ function handeln() {
     }
   }
   if (geholt) sagen("Polly", geholt > 1 ? "Hey! Mitkommen, alle!" : "Hey! Weiter geht's.");
-  else if (S.gruppe.some(g => !g.dabei)) sagen("Polly", "Zu weit weg. Naeher ran.");
+  else if (S.gruppe.some(g => !g.dabei)) sagen("Polly", "Zu weit weg. Näher ran.");
 }
 
 /* ======================= Ablauf ======================= */
@@ -701,6 +748,7 @@ const zielText = document.getElementById("zielText");
 function ziel(txt) { if (zielText.textContent !== txt) zielText.textContent = txt; }
 
 function zielPunkt() {
+  const verirrt = S.gruppe.find(g => !g.dabei);
   if (S.phase === "sammeln") {
     const off = S.gruppe.filter(g => !g.dabei);
     if (!off.length) return {...TUERSTEHER, et:0};
@@ -711,69 +759,65 @@ function zielPunkt() {
     }
     return {x:b.x, y:b.y, et:0};
   }
-  if (S.phase === "einlass") return {x:TUERSTEHER.x, y:TUERSTEHER.y + 22, et:0};
-  if (S.phase === "innen") {
-    const verirrt = S.gruppe.find(g => !g.dabei);
-    if (verirrt) return {x:verirrt.x, y:verirrt.y, et:verirrt.et};
-    return {...TREPPE_EG, et:0};
-  }
-  if (S.phase === "garderobe") {
-    const verirrt = S.gruppe.find(g => !g.dabei);
-    if (verirrt) return {x:verirrt.x, y:verirrt.y, et:verirrt.et};
-    return {...ANNAHME, et:1};
-  }
+  if (S.phase === "einlass")   return {x:TUERSTEHER.x, y:TUERSTEHER.y + 20, et:0};
+  if (verirrt)                 return {x:verirrt.x, y:verirrt.y, et:0};
+  if (S.phase === "jacken")    return {...LOCKERBANK, et:0};
+  if (S.phase === "klo")       return {x:KLOPERSON_POS.x, y:KLOPERSON_POS.y + 26, et:0};
+  if (S.phase === "suche")     return null;   // Ihr wisst nicht, wen ihr sucht
+  if (S.phase === "backstage") return {...BACKSTAGETUER, et:0};
   return null;
 }
 
 function phaseTick(dt) {
   const p = S.spieler;
+  const weg = S.gruppe.filter(g => !g.dabei).length;
 
   if (S.phase === "sammeln") {
-    const fehlt = S.gruppe.filter(g => !g.dabei).length;
-    ziel(fehlt ? `Sammle deine Leute ein — noch ${fehlt} von 4` : "Zum Einlass am Haupteingang");
+    ziel(weg ? `Sammle deine Leute ein — noch ${weg} von 4` : "Zum Einlass am Ticket Counter");
     for (const g of S.gruppe) {
       if (!g.dabei && Math.hypot(g.x - p.x, g.y - p.y) < 44) {
         g.dabei = true;
         sagen(g.name, ["Na endlich.","Ich frier ab, los.","Alles klar, ich bin dabei.","Warte, Jacke — ok, jetzt."][S.gruppe.indexOf(g)] ?? "Los.");
       }
     }
-    if (!fehlt) { S.phase = "einlass"; sagen("Polly", "Alle da. Rein mit uns."); }
+    if (!weg) { S.phase = "einlass"; sagen("Polly", "Alle da. Rein mit uns."); }
+    return;
   }
 
-  else if (S.phase === "einlass") {
-    ziel("Am Türsteher vorbei in die Karoline");
-    if (Math.hypot(p.x - TUERSTEHER.x, p.y - TUERSTEHER.y) < 66 && S.gruppe.every(g => g.dabei)) {
-      S.phase = "innen";
-      sagen("Security", "Fünf?", 1.3);
-      sagen("Polly", "Fünf.", 1.2);
-      sagen("Security", "Jacken kommen hoch ins LOFT. Erste Etage, hinten rechts.", 3.4);
+  if (S.phase === "einlass") {
+    ziel("Am Türsteher vorbei ins glimmer");
+    if (Math.hypot(p.x - TUERSTEHER.x, p.y - TUERSTEHER.y) < 62 && !weg) {
+      S.phase = "jacken";
+      sagen("Security", "Fünf?", 1.2);
+      sagen("Polly", "Fünf.", 1.1);
+      sagen("Security", "Jacken in die Lockers, gleich links. Viel Spaß.", 3.2);
     }
+    return;
   }
 
-  else if (S.phase === "innen") {
-    ziel(S.gruppe.some(g => !g.dabei)
-      ? "Erst alle einsammeln — dann ins Treppenhaus"
-      : "Durch Club 1 zum Treppenhaus");
-    if (S.etage === 0 && S.wechsel <= 0 &&
-        Math.hypot(p.x - TREPPE_EG.x, p.y - TREPPE_EG.y) < 42) {
-      etageWechseln(1, TREPPE_OG);
-      S.phase = "garderobe";
-      sagen("Mio", "Da oben ist VOLT. Nicht gucken, Suki.", 3);
-    }
+  if (S.phase === "jacken") {
+    ziel(weg ? `Erst alle einsammeln — noch ${weg}` : "Jacken in die Lockers · E davor drücken");
+    return;
   }
 
-  else if (S.phase === "garderobe") {
-    const weg = S.gruppe.filter(g => !g.dabei).length;
-    ziel(weg ? `${weg} ${weg===1?"Person hängt":"Leute hängen"} im VOLT fest — holen!`
-             : "Zur Garderobe im LOFT und Jacken abgeben");
-    if (S.etage === 1 && S.wechsel <= 0 &&
-        Math.hypot(p.x - TREPPE_OG.x, p.y - TREPPE_OG.y) < 40 && p.y > TREPPE_OG.y + 18) {
-      etageWechseln(0, TREPPE_EG);
-      S.phase = "innen";
-    }
-    if (!weg && Math.hypot(p.x - ANNAHME.x, p.y - ANNAHME.y) < 62 && !S.abgabeLaeuft) {
-      ziel("Am Tresen: E drücken und Jacken abgeben");
-    }
+  if (S.phase === "klo") {
+    ziel(weg ? `${weg} ${weg===1?"Person hängt":"Leute hängen"} fest — holen!`
+             : "Auf den Toiletten jemanden fragen · E");
+    return;
+  }
+
+  if (S.phase === "suche") {
+    ziel(weg ? `${weg} ${weg===1?"Person tanzt":"Leute tanzen"} sich weg — holen!`
+             : "Rote Jacke. Irgendwo auf den Floors.");
+    return;
+  }
+
+  if (S.phase === "backstage") {
+    ziel(weg ? `${weg} fehlt noch — ohne alle kommt ihr nicht rein`
+             : "Durch die Tür ins Backstage");
+    const drin = raumBei(p.x, p.y, 0);
+    if (drin && drin.id === "backstage" && !weg) gewonnen();
+    return;
   }
 }
 
@@ -789,16 +833,21 @@ function etageWechseln(et, ziel) {
   document.getElementById("karteBez").textContent = et ? "Grundriss 1. OG" : "Grundriss EG";
 }
 
-function abgabeStarten() {
+function lockersAbgeben() {
   if (S.abgabeLaeuft) return;
   S.abgabeLaeuft = true;
-  sagen("Garderobe", "Fünf Jacken, fünf Marken. Nicht verlieren.", 3.2);
+  sagen("Polly", "Fünf Jacken, fünf Schlüssel. Nicht verlieren.", 3.0);
   const alle = [S.spieler, ...S.gruppe];
   alle.forEach((f, i) => setTimeout(() => {
     f.jacke = false; S.abgegeben++;
-    S.funken.push({x:ANNAHME.x, y:ANNAHME.y - 22, r:6, art:"marke", leben:1});
-    if (S.abgegeben === 5) setTimeout(gewonnen, 700);
-  }, 520 + i * 560));
+    S.funken.push({x:LOCKERBANK.x, y:LOCKERBANK.y - 24, r:6, art:"marke", leben:1});
+    if (S.abgegeben === 5) {
+      S.abgabeLaeuft = false;
+      S.phase = "klo";
+      sagen("Mio", "Und jetzt? Wir kennen hier keinen.", 2.6);
+      sagen("Polly", "Auf dem Klo weiß immer jemand was. Immer.", 3.0);
+    }
+  }, 500 + i * 540));
 }
 
 function gewonnen() {
@@ -807,15 +856,17 @@ function gewonnen() {
   document.getElementById("statZeit").textContent =
     `${Math.floor(sek/60)}:${String(sek%60).padStart(2,"0")}`;
   document.getElementById("statWeg").textContent = `${S.verloren}×`;
+  document.getElementById("statFloors").textContent = "2";
+  document.getElementById("endTitel").textContent = "Ihr seid drin";
   document.getElementById("endSatz").textContent = S.verloren === 0
-    ? "Keine einzige verloren. Das schafft sonst niemand zwischen Club 1 und dem LOFT."
-    : `${S.verloren}× musstest du jemanden vom Floor zurückholen. Trotzdem: alle oben, alle ohne Jacke, die Nacht kann anfangen.`;
+    ? "Keine einzige verloren, und das auf zwei Floors. Nuri hat nicht mal nachgefragt."
+    : `${S.verloren}× musstest du jemanden vom Floor zurückholen. Trotzdem: alle fünf hinter der Tür, Jacken im Locker, die Nacht fängt gerade erst an.`;
   const reihe = document.getElementById("markenReihe");
   reihe.innerHTML = "";
-  [S.spieler, ...S.gruppe].forEach((f, i) => {
+  [S.spieler, ...S.gruppe].forEach(f => {
     const d = document.createElement("div");
     d.className = "mrk";
-    d.innerHTML = `<b>${String(41 + i*3).padStart(2,"0")}</b><span>${f.name}</span>`;
+    d.innerHTML = `<b>◆</b><span>${f.name}</span>`;
     reihe.appendChild(d);
   });
   document.getElementById("ende").hidden = false;
@@ -824,9 +875,8 @@ function gewonnen() {
 /* ======================= Gruppe & Tanzdrang ======================= */
 
 const TANZPUNKTE = {
-  club1: [[820,200],[880,220],[760,230],[900,170],[690,200],[980,210]],
-  club2: [[250,190],[320,220],[200,240],[380,170],[300,120]],
-  volt:  [[400,200],[330,230],[470,220],[380,150],[280,190],[520,200]],
+  main:   [[1200,160],[1292,224],[1176,300],[1352,140],[1424,244],[1262,382],[1386,330],[1156,228]],
+  second: [[796,386],[866,362],[930,398],[878,420],[822,356]],
 };
 
 function gruppeTick(dt) {
@@ -853,9 +903,10 @@ function gruppeTick(dt) {
       const eigen = raumBei(g.x, g.y, S.etage);
       if (eigen && eigen.art === "club") g.rave += dt * 42;
       else g.rave = Math.max(0, g.rave - dt * 26);
-      if (g.rave >= 100 && tanzenSchon < 3 && (S.phase === "innen" || S.phase === "garderobe")) {
+      if (g.rave >= 100 && tanzenSchon < 3 &&
+          (S.phase === "klo" || S.phase === "suche" || S.phase === "backstage")) {
         g.rave = 0; g.dabei = false; g.tanzt = true; g.et = S.etage; S.verloren++;
-        const pkte = TANZPUNKTE[eigen.id] || TANZPUNKTE.club1;
+        const pkte = TANZPUNKTE[eigen.id] || TANZPUNKTE.main;
         const zp = pkte[Math.floor(Math.random() * pkte.length)];
         g.zx = zp[0]; g.zy = zp[1];
         sagen(g.name, ["Eine Sekunde!!","Oh — das ist mein Track.","Ich komm gleich nach.","Nur der Drop noch!"][Math.floor(Math.random()*4)], 2.4);
@@ -873,12 +924,12 @@ function gruppeTick(dt) {
 
 function gruppeSpawnen(start) {
   const n = 2 + Math.floor(Math.random() * 3);
-  const x0 = 320 + Math.random() * 1200;
+  const x0 = 700 + Math.random() * 760;
   const schlange = Math.random() < 0.4;
   const g = {
-    x: x0, y: start ? 430 + Math.random()*190 : 600 + Math.random()*40,
+    x: x0, y: start ? 672 + Math.random()*100 : 752 + Math.random()*24,
     schritt: Math.random()*6, i: 0, warte: 0, schlange,
-    weg: [{x:1160, y:470}, {x:1160, y:404}, {x:1160, y:318}, {x:1160, y:230}],
+    weg: [{x:850, y:700}, {x:800, y:604}, {x:706, y:592}, {x:630, y:570}, {x:600, y:520}],
     leute: Array.from({length:n}, (_, k) => ({
       ox:(k - n/2) * 15 + (Math.random()*7-3), oy:(Math.random()*16-8),
       haar: ["#ff5fae","#f2f0ff","#c9d4ff","#1a1020","#8ef5cd","#ffd76e","#b06cff"][Math.floor(Math.random()*7)],
@@ -892,6 +943,42 @@ function gruppeSpawnen(start) {
     })),
   };
   S.npcs.push(g);
+}
+
+// Der Mensch auf dem Klo und die mit der roten Jacke.
+function questLeuteBauen() {
+  S.klo = {
+    x: KLOPERSON_POS.x, y: KLOPERSON_POS.y, bob: 0, gefragt: false, sagt: 0,
+    haar:"#ffd04e", haut:"#c98d63", fit:"#241540", hose:"#2b2140",
+    akz:"#6cf5b4", stil:"dutt", acc:["shades","guertel"],
+  };
+  // Sie traegt als Einzige noch ihre Jacke — rot. Mehr wisst ihr nicht.
+  S.rot = {
+    x: 1290, y: 240, zx: 1290, zy: 240, bob: 0, gefragt: false, warte: 0,
+    haar:"#170e1e", haut:"#8a5638", fit:"#1d1030", hose:"#241a38",
+    akz:"#e8312f", stil:"lang", acc:["netz","guertel"],
+  };
+}
+
+function questTick(dt) {
+  S.klo.bob += dt * 1.3;
+  S.klo.sagt = Math.max(0, S.klo.sagt - dt);
+  const r = S.rot;
+  r.bob += dt * (2 + S.puls * 2);
+  r.sagt = Math.max(0, (r.sagt || 0) - dt);
+  if (S.phase !== "suche" && S.phase !== "backstage" && S.phase !== "fertig") return;
+  r.warte -= dt;
+  if (r.warte <= 0) {
+    const p = TANZPUNKTE.main[Math.floor(Math.random() * TANZPUNKTE.main.length)];
+    r.zx = p[0] + (Math.random()*50 - 25); r.zy = p[1] + (Math.random()*50 - 25);
+    r.warte = 3 + Math.random() * 4;
+  }
+  const dx = r.zx - r.x, dy = r.zy - r.y, d = Math.hypot(dx, dy);
+  if (d > 6) {
+    const v = 34 * dt;
+    if (darfStehen(r.x + dx/d*v, r.y, 0)) r.x += dx/d*v;
+    if (darfStehen(r.x, r.y + dy/d*v, 0)) r.y += dy/d*v;
+  }
 }
 
 function schlangeBauen() {
@@ -945,7 +1032,7 @@ function npcTick(dt) {
   if (S.npcs.length < 6 && Math.random() < dt * 0.55) gruppeSpawnen(false);
 }
 
-/* ======================= Ton: 140 BPM aus der Karoline ======================= */
+/* ======================= Ton: 140 BPM aus der Halle ======================= */
 
 const Ton = {
   an:false, ctx:null, bus:null, filter:null, schritt:0, naechste:0,
@@ -1052,7 +1139,7 @@ addEventListener("orientationchange", () => setTimeout(groesse, 150));
 if (window.visualViewport) visualViewport.addEventListener("resize", groesse);
 if (window.ResizeObserver) new ResizeObserver(groesse).observe(cv);
 
-const kam = {x:700, y:560, zoom:1};
+const kam = {x:980, y:722, zoom:1};
 
 // Wie weit reicht die Etage? Damit die Kamera nicht ins Leere schaut.
 const GRENZEN = {};
@@ -1073,6 +1160,29 @@ function rundRect(c, x, y, w, h, r) {
   c.moveTo(x+rr, y); c.arcTo(x+w, y, x+w, y+h, rr);
   c.arcTo(x+w, y+h, x, y+h, rr); c.arcTo(x, y+h, x, y, rr);
   c.arcTo(x, y, x+w, y, rr); c.closePath();
+}
+
+// Das Haus ist Klinker. Zwischen Plastikschale und Raeumen liegt das Mauerwerk.
+function klinkerband(x1, y1, x2, y2) {
+  const d = 16;
+  const ring = new Path2D();
+  ring.rect(x1 - d, y1 - d, (x2 - x1) + d*2, (y2 - y1) + d*2);
+  ring.rect(x1, y1, x2 - x1, y2 - y1);
+  cx.save();
+  cx.clip(ring, "evenodd");
+  const g = cx.createLinearGradient(0, y1 - d, 0, y2 + d);
+  g.addColorStop(0, "#b05e42"); g.addColorStop(.55, "#8e4634"); g.addColorStop(1, "#653125");
+  cx.fillStyle = g;
+  cx.fillRect(x1 - d, y1 - d, (x2 - x1) + d*2, (y2 - y1) + d*2);
+  // Ziegellagen
+  cx.strokeStyle = "rgba(255,226,206,.16)"; cx.lineWidth = 1;
+  for (let y = y1 - d + 4; y < y2 + d; y += 5) {
+    cx.beginPath(); cx.moveTo(x1 - d, y); cx.lineTo(x2 + d, y); cx.stroke();
+  }
+  cx.restore();
+  // Kante zur Schale
+  cx.strokeStyle = "rgba(48,20,14,.5)"; cx.lineWidth = 2;
+  cx.strokeRect(x1 - d, y1 - d, (x2 - x1) + d*2, (y2 - y1) + d*2);
 }
 
 function welt() {
@@ -1134,23 +1244,25 @@ function welt() {
   herz(cx, sx + sw/2, sy + sh - 22, 17, "rgba(255,255,255,.75)");
   herz(cx, sx + sw/2, sy + sh - 23, 11, "rgba(255,140,200,.85)");
 
+  klinkerband(minX, minY, maxX, maxY);
+
   /* --- Straße und Vorplatz --- */
-  for (const r of rms) if (r.art === "strasse" || r.id === "vorpl") boden(r);
-  for (const r of rms) if (r.art !== "strasse" && r.id !== "vorpl") boden(r);
+  for (const r of rms) if (r.art === "strasse" || r.id === "vorplatz") boden(r);
+  for (const r of rms) if (r.art !== "strasse" && r.id !== "vorplatz") boden(r);
 
   if (et === 0) vordach();
 
   /* --- Wände --- */
   for (const r of rms) if (r.art !== "strasse" && r.art !== "drau") waende(r);
-  if (et === 0) waende(R.aussen, ["n","o","s"]);
 
   /* --- Möbel --- */
   for (const m of MOEBEL) if (m.et === et) moebel(m);
+  wcDeko();
 
   /* --- Licht --- */
   cx.save(); cx.globalCompositeOperation = "lighter";
   for (const r of rms) if (r.art === "club") clublicht(r);
-  if (et === 1) tresenlicht();
+  tresenlicht();
   cx.restore();
 }
 
@@ -1195,7 +1307,7 @@ function boden(r) {
   cx.fillStyle = gl; cx.fillRect(r.x, r.y, r.w, r.h);
   cx.restore();
 
-  // Mittelstreifen der Karolinenstraße
+  // Mittelstreifen der Stockmeyerstraße
   if (r.id === "str") {
     cx.save(); cx.strokeStyle = "rgba(255,215,110,.2)"; cx.lineWidth = 3; cx.setLineDash([26, 22]);
     cx.beginPath(); cx.moveTo(r.x, r.y + r.h/2); cx.lineTo(r.x + r.w, r.y + r.h/2); cx.stroke(); cx.restore();
@@ -1258,37 +1370,33 @@ function waende(r, seiten = ["n","o","s","w"]) {
 }
 
 function vordach() {
-  // Das Stahlvordach über dem Vorplatz, wie auf der Außenansicht
-  const v = R.vorpl;
-  cx.save();
-  cx.globalAlpha = 0.22;
-  cx.strokeStyle = "#cbb8e0"; cx.lineWidth = 3;
-  for (let x = v.x + 40; x < v.x + v.w; x += 54) {
-    cx.beginPath(); cx.moveTo(x, v.y - 6); cx.lineTo(x - 16, v.y + v.h - 26); cx.stroke();
-  }
-  cx.lineWidth = 5;
-  cx.beginPath(); cx.moveTo(v.x + 24, v.y + v.h - 26); cx.lineTo(v.x + v.w - 24, v.y + v.h - 26); cx.stroke();
-  cx.restore();
-  // Mast
-  cx.fillStyle = "rgba(210,196,228,.4)";
-  rundRect(cx, v.x + v.w/2 - 4, v.y + 10, 8, v.h - 40, 4); cx.fill();
-
-  // Banner über dem Haupteingang
   const t = TUEREN.find(t => t.haupt);
   cx.save();
   cx.shadowColor = "rgba(0,0,0,.5)"; cx.shadowBlur = 10; cx.shadowOffsetY = 4;
-  rundRect(cx, t.x - 66, t.y - 56, t.w + 132, 30, 6);
+  rundRect(cx, t.x - 106, t.y - 50, 216, 30, 6);
   cx.fillStyle = "#1c1030"; cx.fill();
   cx.restore();
   cx.strokeStyle = "rgba(255,158,203,.5)"; cx.lineWidth = 1.5;
-  rundRect(cx, t.x - 63, t.y - 53, t.w + 126, 24, 5); cx.stroke();
-  cx.font = `800 15px ${"'Bricolage Grotesque', sans-serif"}`;
+  rundRect(cx, t.x - 103, t.y - 47, 210, 24, 5); cx.stroke();
+  cx.font = `800 16px ${"'Bricolage Grotesque', sans-serif"}`;
   cx.fillStyle = "#ff9ecb"; cx.textAlign = "center";
-  cx.fillText("RES-TLESS", t.x + t.w/2, t.y - 36);
+  cx.fillText("glimmer", t.x + 2, t.y - 29);
   cx.font = `400 8px ${"'DM Mono', monospace"}`;
   cx.fillStyle = "rgba(255,243,248,.5)";
-  cx.fillText("19.09.2026 · 23:00 – 08:00", t.x + t.w/2, t.y - 61);
+  cx.fillText("ERÖFFNUNG · 02.10.2026 · 23:00 – 10:00", t.x + 2, t.y - 55);
   cx.textAlign = "left";
+
+  // Gleise auf dem Vorplatz — der Oberhafen war Bahngelaende
+  const v = R.vorplatz;
+  cx.save(); cx.globalAlpha = 0.16; cx.strokeStyle = "#cbb8e0"; cx.lineWidth = 3;
+  for (const yy of [v.y + 46, v.y + 72]) {
+    cx.beginPath(); cx.moveTo(v.x + 8, yy); cx.lineTo(v.x + v.w - 8, yy); cx.stroke();
+  }
+  cx.lineWidth = 2;
+  for (let x = v.x + 18; x < v.x + v.w - 10; x += 26) {
+    cx.beginPath(); cx.moveTo(x, v.y + 42); cx.lineTo(x, v.y + 76); cx.stroke();
+  }
+  cx.restore();
 }
 
 function clublicht(r) {
@@ -1318,12 +1426,78 @@ function clublicht(r) {
 }
 
 function tresenlicht() {
-  const g = cx.createLinearGradient(0, TRESEN.y - 30, 0, TRESEN.y + 70);
+  const g = cx.createLinearGradient(0, 380, 0, 500);
   g.addColorStop(0, "rgba(255,215,110,0)");
   g.addColorStop(.45, "rgba(255,215,110,.2)");
   g.addColorStop(1, "rgba(255,215,110,0)");
   cx.fillStyle = g;
-  cx.fillRect(TRESEN.x - 20, TRESEN.y - 30, TRESEN.w + 40, 100);
+  cx.fillRect(415, 380, 300, 120);
+}
+
+// Damit die Toiletten auch als Toiletten zu erkennen sind
+function wcDeko() {
+  const r = R.wc;
+  cx.save();
+  const zonen = [
+    {y:100, h:172, name:"FLINTA*",      ton:"rgba(255,110,190,.10)"},
+    {y:272, h:140, name:"ALLGENDER",    ton:"rgba(110,200,255,.10)"},
+    {y:412, h:108, name:"ACC. · STAFF", ton:"rgba(150,245,196,.10)"},
+  ];
+  cx.font = "500 9px 'DM Mono', monospace";
+  for (const z of zonen) {
+    cx.fillStyle = z.ton;
+    cx.fillRect(r.x, z.y, r.w, z.h);
+    cx.strokeStyle = "rgba(255,243,248,.16)"; cx.lineWidth = 1;
+    cx.beginPath(); cx.moveTo(r.x, z.y + z.h); cx.lineTo(r.x + r.w, z.y + z.h); cx.stroke();
+    cx.fillStyle = "rgba(255,243,248,.5)";
+    cx.fillText(z.name, r.x + 112, z.y + 15);
+  }
+
+  // Kabinen: Tuerblatt, Besetztzeichen, Schuessel, Spuelkasten
+  for (const m of MOEBEL) {
+    if (m.typ !== "kabine") continue;
+    cx.fillStyle = "rgba(248,238,250,.8)";
+    cx.fillRect(m.x + 5, m.y + m.h/2 - 13, 7, 9);
+    cx.beginPath(); cx.ellipse(m.x + 17, m.y + m.h/2 + 2, 7.5, 9.5, 0, 0, 7); cx.fill();
+    cx.fillStyle = "rgba(96,74,118,.55)";
+    cx.beginPath(); cx.ellipse(m.x + 17, m.y + m.h/2 + 2, 4.6, 6.2, 0, 0, 7); cx.fill();
+    cx.fillStyle = "rgba(255,243,248,.35)";
+    cx.fillRect(m.x + m.w - 3.5, m.y + 4, 3.5, m.h - 8);
+    cx.fillStyle = (m.y / 48 | 0) % 2 ? "#ff5f7a" : "#9ff5c4";
+    cx.beginPath(); cx.arc(m.x + m.w - 8, m.y + m.h/2, 2.6, 0, 7); cx.fill();
+  }
+
+  // Waschbecken mit Spiegel
+  const b = MOEBEL.find(m => m.typ === "becken");
+  if (b) {
+    cx.fillStyle = "rgba(186,224,255,.2)";
+    cx.fillRect(b.x + 4, b.y - 21, b.w - 8, 17);
+    cx.strokeStyle = "rgba(255,255,255,.4)"; cx.lineWidth = 1;
+    cx.strokeRect(b.x + 4, b.y - 21, b.w - 8, 17);
+    cx.fillStyle = "rgba(248,240,252,.9)";
+    for (let i = 0; i < 3; i++) {
+      cx.beginPath(); cx.ellipse(b.x + 18 + i*28, b.y + b.h/2, 10, 7, 0, 0, 7); cx.fill();
+      cx.fillStyle = "rgba(120,100,140,.45)";
+      cx.fillRect(b.x + 16 + i*28, b.y + 2, 4, 5);
+      cx.fillStyle = "rgba(248,240,252,.9)";
+    }
+  }
+
+  // Rollstuhlgerechtes WC, 1,5 × 1,5 m laut Plan
+  const a = MOEBEL.find(m => m.typ === "accwc");
+  if (a) {
+    const mx = a.x + a.w * 0.62, my = a.y + a.h * 0.5;
+    cx.strokeStyle = "rgba(159,245,196,.75)"; cx.lineWidth = 2.2;
+    cx.beginPath(); cx.arc(mx + 3, my + 9, 12, 0, 7); cx.stroke();
+    cx.beginPath(); cx.arc(mx - 4, my - 13, 4.2, 0, 7); cx.stroke();
+    cx.beginPath(); cx.moveTo(mx - 4, my - 8); cx.lineTo(mx - 4, my + 3);
+    cx.lineTo(mx + 9, my + 3); cx.stroke();
+    cx.fillStyle = "rgba(248,238,250,.85)";
+    cx.beginPath(); cx.ellipse(a.x + 18, a.y + 22, 8, 10, 0, 0, 7); cx.fill();
+    cx.fillStyle = "rgba(96,74,118,.5)";
+    cx.beginPath(); cx.ellipse(a.x + 18, a.y + 22, 5, 6.5, 0, 0, 7); cx.fill();
+  }
+  cx.restore();
 }
 
 function moebel(m) {
@@ -1336,8 +1510,14 @@ function moebel(m) {
   if (m.typ === "tisch") f = "#6a4c78";
   if (m.typ === "beet") f = "#2d4a3c";
   if (m.typ === "wagen") f = "#8a4a52";
-  if (m.typ === "garderobe") f = "#8a6a2e";
+  if (m.typ === "garderobe" || m.typ === "locker") f = "#8a6a2e";
   if (m.typ === "buegel") f = "#33284a";
+  if (m.typ === "kabine") f = "#5d4576";
+  if (m.typ === "becken") f = "#7b6a90";
+  if (m.typ === "sofa") f = "#4a3a63";
+  if (m.typ === "accwc") f = "#5d4576";
+  if (m.typ === "wand") f = "#c96a9e";
+  if (m.typ === "foh") f = "#241a33";
   cx.fillStyle = f; cx.fill();
   cx.restore();
   cx.fillStyle = "rgba(255,243,248,.22)";
@@ -1367,6 +1547,34 @@ function moebel(m) {
     for (let x = m.x + 14; x < m.x + m.w - 8; x += 17) {
       cx.beginPath(); cx.moveTo(x, m.y + 8); cx.lineTo(x + 7, m.y + 30); cx.lineTo(x + 14, m.y + 8); cx.stroke();
     }
+  }
+  if (m.typ === "locker") {
+    cx.strokeStyle = "rgba(20,12,6,.45)"; cx.lineWidth = 1.4;
+    for (let x = m.x + 13; x < m.x + m.w - 4; x += 13) {
+      cx.beginPath(); cx.moveTo(x, m.y + 3); cx.lineTo(x, m.y + m.h - 3); cx.stroke();
+    }
+    cx.fillStyle = "rgba(255,243,248,.55)";
+    for (let x = m.x + 8; x < m.x + m.w - 6; x += 13) cx.fillRect(x, m.y + m.h/2 - 1, 3, 2);
+  }
+  if (m.typ === "kabine") {
+    cx.strokeStyle = "rgba(255,243,248,.3)"; cx.lineWidth = 1.4;
+    for (let x = m.x + 30; x < m.x + m.w - 6; x += 30) {
+      cx.beginPath(); cx.moveTo(x, m.y + 2); cx.lineTo(x, m.y + m.h - 2); cx.stroke();
+    }
+  }
+  if (m.typ === "becken") {
+    cx.fillStyle = "rgba(255,243,248,.42)";
+    for (let x = m.x + 12; x < m.x + m.w - 8; x += 26) {
+      cx.beginPath(); cx.ellipse(x + 8, m.y + m.h/2, 8, 5, 0, 0, 7); cx.fill();
+    }
+  }
+  if (m.typ === "foh") {
+    cx.fillStyle = "#3ef1e4";
+    for (let i = 0; i < 4; i++) {
+      cx.globalAlpha = 0.3 + Math.abs(Math.sin(S.t*2.2 + i*1.3))*0.7;
+      cx.fillRect(m.x + 10 + (i%2)*32, m.y + 14 + Math.floor(i/2)*22, 22, 4);
+    }
+    cx.globalAlpha = 1;
   }
   if (m.typ === "garderobe") {
     cx.font = `500 10px ${"'DM Mono', monospace"}`;
@@ -1692,6 +1900,24 @@ function statisten() {
       figur(f, 0.88);
     });
   }
+  // Die auf dem Klo
+  if (S.klo) {
+    const k = S.klo;
+    const f = {x:k.x, y:k.y, schritt:k.bob, blick:Math.PI/2, haar:k.haar, haut:k.haut,
+               fit:k.fit, akz:k.akz, acc:k.acc, hose:k.hose, stil:k.stil, jacke:false};
+    figur(f, 1.0, S.phase === "klo" ? "#6cf5b4" : null);
+    if (k.sagt > 0) sprechblase(f, "Rote Jacke!", "#6cf5b4");
+    else if (S.phase === "klo") sprechblase(f, "?", "#fff3f8");
+  }
+  // Die mit der roten Jacke — als Einzige noch angezogen
+  if (S.rot) {
+    const r = S.rot;
+    const f = {x:r.x, y:r.y, schritt:r.bob, blick:Math.PI/2, haar:r.haar, haut:r.haut,
+               fit:r.fit, akz:r.akz, acc:r.acc, hose:r.hose, stil:r.stil, jacke:true};
+    figur(f, 1.0, null);
+    if (r.sagt > 0) sprechblase(f, "Na gut.", "#e8312f");
+  }
+
   // Die Schlange: steht an, wartet, kommentiert
   for (const q of S.schlange) {
     const f = {x:q.x, y:q.y, schritt:q.bob, blick: q.mault > 0 ? Math.PI/2 : -Math.PI/2,
@@ -1914,11 +2140,16 @@ function schleife(jetzt) {
     gruppeTick(dt);
     npcTick(dt);
     schlangeTick(dt);
+    questTick(dt);
     phaseTick(dt);
   }
 
   const raum = raumBei(S.spieler.x, S.spieler.y, S.etage);
-  if (raum) { S.cutoffZiel = raum.filter; S.raumJetzt = raum.id; S.imClub = raum.art === "club"; }
+  if (raum) {
+    S.cutoffZiel = raum.filter; S.raumJetzt = raum.id; S.imClub = raum.art === "club";
+    const el = document.getElementById("etage");
+    if (el.textContent !== raum.name) el.textContent = raum.name;
+  }
   Ton.tick();
   rahmen(dt);
   crewLeisteFrisch();
@@ -2000,7 +2231,7 @@ function rahmen(dt) {
 
 /* =======================================================================
    INTRO — Hommage an den PollyWorld-Teaser von 2006: ein Logoschild in
-   der Landschaft, Sterne dahinter. Nur steht hier die Karoline, und nach
+   der Landschaft, Sterne dahinter. Nur steht hier der Klinkerbau, und nach
    vier Sekunden kippt der Tag in die Nacht.
    ======================================================================= */
 
@@ -2030,7 +2261,7 @@ function stern(c, x, y, r, dreh, fuell, rand) {
 }
 
 function wortmarke(x, y, gr) {
-  const txt = "POCKET KOSMOS";
+  const txt = "POCKET GLIMMER";
   cx.save();
   cx.textAlign = "center"; cx.textBaseline = "middle";
   cx.font = `800 ${gr}px 'Bricolage Grotesque','Trebuchet MS',sans-serif`;
@@ -2044,34 +2275,58 @@ function wortmarke(x, y, gr) {
   cx.restore();
 }
 
-// Die Karoline als Scherenschnitt: Giebel, Turm, Fensterreihen
-function karolineRiss(x, y, b, h, farbe) {
+// Der Klinkerbau als Scherenschnitt: Staffelattika, Fensterreihen, Rundbogentore
+function klinkerRiss(x, y, b, h, farbe) {
   cx.fillStyle = farbe;
   cx.beginPath();
   cx.moveTo(x, y);
-  cx.lineTo(x, y - h * 0.72);
-  cx.lineTo(x + b * 0.10, y - h * 0.72);
-  cx.lineTo(x + b * 0.16, y - h * 0.94);
-  cx.lineTo(x + b * 0.22, y - h * 0.72);
-  cx.lineTo(x + b * 0.62, y - h * 0.72);
-  cx.lineTo(x + b * 0.70, y - h);
-  cx.lineTo(x + b * 0.78, y - h * 0.72);
-  cx.lineTo(x + b, y - h * 0.72);
+  cx.lineTo(x, y - h * 0.84);
+  cx.lineTo(x + b * 0.05, y - h * 0.92);
+  cx.lineTo(x + b * 0.33, y - h * 0.92);
+  cx.lineTo(x + b * 0.37, y - h);
+  cx.lineTo(x + b * 0.69, y - h);
+  cx.lineTo(x + b * 0.73, y - h * 0.9);
+  cx.lineTo(x + b, y - h * 0.9);
   cx.lineTo(x + b, y);
   cx.closePath(); cx.fill();
-  // Fenster
-  cx.fillStyle = "rgba(255,255,255,.2)";
-  for (let r = 0; r < 3; r++) {
+
+  // Ziegellagen
+  cx.save(); cx.globalAlpha = 0.5;
+  cx.strokeStyle = "rgba(255,228,208,.3)"; cx.lineWidth = 1;
+  for (let yy = y - h * 0.88; yy < y; yy += h * 0.035) {
+    cx.beginPath(); cx.moveTo(x, yy); cx.lineTo(x + b, yy); cx.stroke();
+  }
+  cx.restore();
+
+  // Drei Fensterreihen
+  cx.fillStyle = "rgba(255,255,255,.22)";
+  for (let g = 0; g < 3; g++) {
     for (let k = 0; k < 9; k++) {
-      const fw = b * 0.052, fh = h * 0.12;
-      cx.beginPath();
-      const fx = x + b * 0.06 + k * b * 0.101, fy = y - h * 0.62 + r * h * 0.19;
-      cx.moveTo(fx, fy + fh);
-      cx.lineTo(fx, fy + fh * 0.3);
-      cx.arc(fx + fw/2, fy + fh*0.3, fw/2, Math.PI, 0);
-      cx.lineTo(fx + fw, fy + fh);
-      cx.closePath(); cx.fill();
+      cx.fillRect(x + b * 0.055 + k * b * 0.104, y - h * (0.78 - g * 0.21), b * 0.05, h * 0.14);
     }
+  }
+
+  // Zwei Rundbogentore im Erdgeschoss, wie auf dem Foto
+  cx.fillStyle = "rgba(18,9,22,.6)";
+  for (const tx of [x + b * 0.27, x + b * 0.57]) {
+    const tw = b * 0.1, th = h * 0.24;
+    cx.beginPath();
+    cx.moveTo(tx, y);
+    cx.lineTo(tx, y - th + tw / 2);
+    cx.arc(tx + tw / 2, y - th + tw / 2, tw / 2, Math.PI, 0);
+    cx.lineTo(tx + tw, y);
+    cx.closePath(); cx.fill();
+  }
+
+  // Graffiti — der Bau ist von oben bis unten besprüht
+  const bunt = ["rgba(255,214,72,.55)","rgba(120,224,182,.5)","rgba(255,120,180,.45)",
+                "rgba(140,170,255,.45)","rgba(255,160,90,.5)"];
+  for (let i = 0; i < 9; i++) {
+    cx.fillStyle = bunt[i % bunt.length];
+    const gx = x + b * (0.07 + i * 0.1), gy = y - h * (0.28 + (i % 4) * 0.17);
+    cx.save(); cx.translate(gx, gy); cx.rotate(Math.sin(i * 2.3) * 0.5);
+    cx.fillRect(-b * 0.035, -h * 0.022, b * 0.07, h * 0.044);
+    cx.restore();
   }
 }
 
@@ -2116,13 +2371,13 @@ function introRahmen(dt) {
   cx.fillStyle = mische("#54d8d2", "#1d1436", nacht);
   cx.fillRect(0, H - (H*0.16)*bodenA, W, H*0.16);
 
-  // Die Karoline hinter dem Schild
+  // Die Halle hinter dem Schild
   const hausA = weich(spanne(T, 0.8, 1.9));
   if (hausA > 0) {
     cx.save(); cx.globalAlpha = hausA;
     const hb = Math.min(W * 0.66, M * 1.25), hh = M * 0.34;
-    karolineRiss(mx - hb/2, hy + H*0.02, hb, hh * (0.6 + 0.4*hausA),
-                 mische("#9a5cc4", "#6b3f8f", nacht));
+    klinkerRiss(mx - hb/2, hy + H*0.02, hb, hh * (0.6 + 0.4*hausA),
+                mische("#b05e42", "#55291f", nacht));
     cx.restore();
   }
 
@@ -2203,7 +2458,7 @@ function introRahmen(dt) {
       cx.fillStyle = "#ffe6a0";
       cx.textAlign = "center"; cx.textBaseline = "middle";
       cx.font = `500 ${uh*0.42}px 'DM Mono',monospace`;
-      cx.fillText("KAROLINENSTRASSE 45  ·  RES-TLESS  ·  23:14", mx, uy + uh*0.54);
+      cx.fillText("STOCKMEYERSTRASSE 43  ·  OBERHAFEN  ·  23:14", mx, uy + uh*0.54);
       cx.restore();
     }
   }
@@ -2238,7 +2493,7 @@ function introFertig() {
   if (S.phase !== "intro") return;
   document.body.removeAttribute("data-intro");
   aufstellen();
-  sagen("Polly", "Ok. Vier Leute, fuenf Jacken, eine Garderobe. Das kriegen wir hin.", 3.6);
+  sagen("Polly", "Ok. Vier Leute, fuenf Jacken, ein Backstage. Das kriegen wir hin.", 3.6);
 }
 
 /* ======================= Start ======================= */
@@ -2255,14 +2510,12 @@ document.getElementById("nochmal").addEventListener("click", () => {
   S.abgabeLaeuft = false;
   document.getElementById("ende").hidden = true;
   aufstellen();
-  document.getElementById("etage").textContent = "Erdgeschoss";
-  document.getElementById("karteBez").textContent = "Grundriss EG";
 });
 
 cv.addEventListener("pointerdown", () => { if (S.phase === "intro") introFertig(); });
 
 groesse();
-S.spieler = neueFigur(CREW[0], 700, 588, true);
+S.spieler = neueFigur(CREW[0], 980, 722, true);
 crewLeisteBauen();
 requestAnimationFrame(schleife);
 })();
