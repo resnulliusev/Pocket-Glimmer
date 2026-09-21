@@ -246,17 +246,60 @@ body[data-touch="1"] #touch{display:block}
 .endkarte h2{font-family:var(--disp);font-weight:800;font-size:clamp(27px,6.5vw,42px);margin:0;
   letter-spacing:-.03em;color:var(--plastik);text-wrap:balance}
 .endkarte .satz{font-size:14.5px;line-height:1.55;color:#e4d6ee;margin:11px auto 0;max-width:40ch;text-wrap:pretty}
-.marken{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;margin:20px 0 4px}
-.mrk{
-  width:60px;height:74px;border-radius:9px;display:flex;flex-direction:column;align-items:center;
-  justify-content:center;gap:3px;background:linear-gradient(165deg,#ffe49c,#e0a93c);
-  color:#4a2f00;font-family:var(--mono);box-shadow:0 5px 12px rgba(0,0,0,.42), inset 0 2px 0 rgba(255,255,255,.55);
-  position:relative;
+.baender{display:flex;flex-direction:column;gap:7px;margin:20px auto 6px;max-width:330px}
+.band{
+  display:flex;align-items:center;gap:10px;padding:8px 14px;border-radius:999px;
+  background:linear-gradient(100deg,#25123a 0%,#4a2360 55%,#2c1642 100%);
+  border:1.5px solid rgba(108,245,180,.45);
+  box-shadow:0 3px 10px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.12);
+  font-family:var(--mono);font-size:11px;color:#dbf7e8;
 }
-.mrk::before{content:"";position:absolute;top:7px;width:9px;height:9px;border-radius:50%;
-  background:rgba(74,47,0,.26);box-shadow:inset 0 1px 2px rgba(0,0,0,.4)}
-.mrk b{font-size:19px;font-weight:500;margin-top:11px;font-variant-numeric:tabular-nums}
-.mrk span{font-size:8px;letter-spacing:.09em;text-transform:uppercase;opacity:.8}
+.band .pkt{width:9px;height:9px;border-radius:50%;background:var(--mint);flex:none;
+  box-shadow:0 0 7px rgba(108,245,180,.8)}
+.band .nm{flex:1;text-align:left;font-weight:500;letter-spacing:.04em}
+.band .zc{letter-spacing:.12em;color:var(--gold);font-variant-numeric:tabular-nums}
+.bandkopf{font-family:var(--mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--grau);margin:18px 0 -6px}
+
+#eintrag{margin-top:16px}
+#eintrag .eingabe{
+  display:flex;align-items:center;gap:7px;margin-top:8px;max-width:330px;
+  margin-left:auto;margin-right:auto;
+}
+#eintrag .at{font-family:var(--mono);font-size:15px;color:var(--plastik);flex:none}
+#instaFeld{
+  flex:1;min-width:0;padding:9px 12px;border-radius:10px;
+  border:1.5px solid rgba(255,158,203,.4);background:rgba(20,12,30,.7);
+  color:var(--sahne);font-family:var(--mono);font-size:13px;letter-spacing:.03em;
+}
+#instaFeld::placeholder{color:rgba(255,243,248,.3)}
+#instaFeld:focus{outline:2px solid var(--volt);outline-offset:1px;border-color:transparent}
+#eintragen{
+  flex:none;cursor:pointer;border:none;border-radius:10px;padding:9px 16px;
+  font-family:var(--disp);font-weight:800;font-size:13px;color:#3d0f2b;
+  background:linear-gradient(170deg,var(--plastik-hell),var(--plastik-tief));
+  box-shadow:0 4px 0 #a6417a;
+}
+#eintragen:active{transform:translateY(2px);box-shadow:0 2px 0 #a6417a}
+#eintragen:focus-visible{outline:3px solid var(--volt);outline-offset:2px}
+
+.bestenliste{
+  list-style:none;margin:10px auto 0;padding:0;max-width:330px;
+  display:flex;flex-direction:column;gap:4px;
+}
+.bestenliste li{
+  display:flex;align-items:center;gap:9px;padding:6px 12px;border-radius:9px;
+  background:rgba(255,255,255,.05);font-family:var(--mono);font-size:11.5px;
+  color:#e4d6ee;
+}
+.bestenliste li.neu{background:rgba(255,142,198,.22);box-shadow:inset 0 0 0 1.5px rgba(255,142,198,.55)}
+.bestenliste .pos{color:var(--grau);flex:none;font-variant-numeric:tabular-nums}
+.bestenliste .wer{flex:1;min-width:0;text-align:left;overflow:hidden;
+  text-overflow:ellipsis;white-space:nowrap;color:var(--plastik-hell)}
+.bestenliste .zt{color:var(--volt);font-variant-numeric:tabular-nums;flex:none}
+.bestenliste .vl{color:var(--gold);flex:none;font-variant-numeric:tabular-nums;width:34px;text-align:right}
+.hinweis{font-family:var(--mono);font-size:9px;letter-spacing:.06em;color:var(--grau);
+  margin:10px 0 0;opacity:.75;line-height:1.5}
 .bilanz{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin-top:18px}
 .bilanz div{font-family:var(--mono);font-size:11px;color:var(--grau);letter-spacing:.06em}
 .bilanz b{display:block;font-size:20px;color:var(--volt);font-weight:500;margin-top:3px;
@@ -373,7 +416,8 @@ body[data-touch="1"] #touch{display:block}
         Du bist Polly. Ihr wollt ins Backstage. Der Weg dahin geht so: Jacken in die
         Lockers, dann jemanden auf den Toiletten fragen. Die schickt euch weiter zu
         jemandem mit einer <b>roten Jacke</b> — irgendwo auf den Floors.
-        <b>Ihr wisst nicht, wer das ist.</b>
+        <b>Ihr wisst nicht, wer das ist.</b> Und anhaben tut die Jacke dort niemand.
+        Also: durchfragen.
       </p>
       <div class="zettel">
         <b>WASD</b> oder Pfeiltasten — laufen<br>
@@ -392,7 +436,22 @@ body[data-touch="1"] #touch{display:block}
     <div class="panel endkarte">
       <h2 id="endTitel">Alle fünf Jacken hängen</h2>
       <p class="satz" id="endSatz"></p>
-      <div class="marken" id="markenReihe"></div>
+      <p class="bandkopf">Backstage · Eintrittscode</p>
+      <div class="baender" id="baenderReihe"></div>
+      <div id="eintrag">
+        <label class="bandkopf" for="instaFeld">Trag dich in die Bestenliste ein</label>
+        <div class="eingabe">
+          <span class="at">@</span>
+          <input id="instaFeld" type="text" maxlength="30" autocomplete="off"
+                 spellcheck="false" placeholder="deininsta">
+          <button id="eintragen" type="button">Eintragen</button>
+        </div>
+      </div>
+
+      <p class="bandkopf" id="listeKopf" hidden>Bestenliste · die schnellsten zehn</p>
+      <ol class="bestenliste" id="bestenliste" hidden></ol>
+      <p class="hinweis" id="listeHinweis" hidden></p>
+
       <div class="bilanz">
         <div>Gebraucht<b id="statZeit">–</b></div>
         <div>Wieder eingesammelt<b id="statWeg">–</b></div>
@@ -429,7 +488,7 @@ const RAEUME = [
   {id:"bar",    et:0, x:705,  y:70,  w:385, h:175, name:"Bar Area",         art:"innen",  ton:"#ffb86b", filter:3000},
   {id:"barsued",et:0, x:705,  y:245, w:185, h:85,  name:"Bar Area",         art:"innen",  ton:"#ffb86b", filter:3200},
   {id:"schleuse",et:0,x:890,  y:245, w:200, h:85,  name:"Schleuse",         art:"treppe", ton:"#8f7ab0", filter:7000},
-  {id:"second", et:0, x:705,  y:334, w:310, h:126, name:"Second Floor",     art:"club",   ton:"#5f8cff", filter:16000},
+  {id:"second", et:0, x:705,  y:340, w:310, h:120, name:"Second Floor",     art:"club",   ton:"#5f8cff", filter:16000},
   {id:"main",   et:0, x:1094, y:65,  w:466, h:375, name:"Main Floor",       art:"club",   ton:"#b06cff", filter:19000},
   {id:"backstage",et:0,x:1565,y:80,  w:120, h:185, name:"Backstage",        art:"loft",   ton:"#6cf5b4", filter:600},
   {id:"vorplatz",et:0, x:719, y:505, w:280, h:160, name:"Vorplatz",         art:"drau",   ton:"#5c4e73", filter:520},
@@ -446,8 +505,8 @@ const TUEREN = [
   {et:0, x:286,  y:288, w:26, h:66},              // Hallway → Toiletten
   {et:0, x:694,  y:258, w:24, h:54},              // Hallway → Bar Area
   {et:0, x:705,  y:236, w:185, h:20},             // Bar Area → Bar Area Süd, offen
-  {et:0, x:905,  y:236, w:60,  h:20},             // Bar Area → Schleuse
-  {et:0, x:1080, y:280, w:30,  h:44},             // Schleuse → Main Floor
+  {et:0, x:900,  y:236, w:80,  h:20},             // Bar Area → Schleuse
+  {et:0, x:1080, y:266, w:30,  h:58},             // Schleuse → Main Floor
   {et:0, x:760,  y:322, w:100, h:24},             // Bar Area Süd → Second Floor
   {et:0, x:1552, y:135, w:26, h:70, backst:true}, // Main Floor → Backstage
 ];
@@ -482,7 +541,7 @@ const MOEBEL = [
   {et:0, x:716,  y:110, w:34,  h:126, typ:"tresen"},
   {et:0, x:958,  y:80,  w:122, h:32,  typ:"tresen"},
   {et:0, x:1102, y:150, w:78,  h:62,  typ:"foh"},
-  {et:0, x:985,  y:245, w:20,  h:56,  typ:"wand"},
+  {et:0, x:985,  y:245, w:20,  h:33,  typ:"wand"},
   // Main Floor: Kanzel an der Ostwand
   {et:0, x:1498, y:215, w:44,  h:120, typ:"djq", raum:"main"},
   {et:0, x:1500, y:88,  w:40,  h:56,  typ:"box"},
@@ -507,6 +566,22 @@ const MECKER = [
   "Hey. Ernsthaft jetzt?",
   "Hey! Nicht vordraengeln.",
 ];
+// Leute, die nicht tanzen, aber da sind
+const STEHPLAETZE = [
+  [790,120],[842,98],[884,142],[932,108],[982,152],[1012,152],[862,202],[934,198],[792,190],
+  [756,150],[900,178],[1040,196],[960,140],[820,150],
+  [760,272],[832,292],[798,312],[866,268],
+  [350,124],[470,124],[322,196],[508,200],[420,202],[400,138],
+  [420,300],[520,322],[624,300],[356,296],[560,340],
+  [482,440],[624,472],[470,490],
+  [600,560],[650,610],
+];
+const STEH_GESPRAECH = [
+  "…und dann war die Bahn weg.", "Hast du Feuer?", "Ich hol uns was.",
+  "Wo seid ihr denn gewesen?", "Der Sound hier, ey.", "Gleich, gleich.",
+  "Ich muss kurz raus.", "Kennst du die?",
+];
+
 const RUF_MAX = 2;
 const RUF_NACH = 4.5;
 const RUF_SPERRE = 10;
@@ -676,6 +751,22 @@ function handeln() {
     sagen("Polly", "Erst alle fünf. Ohne die anderen fange ich nicht an.", 2.6); return;
   }
 
+  // Publikum, das nicht tanzt
+  STEHPLAETZE.forEach((q, i) => {
+    const wack = Math.sin(S.t * (1.1 + (i % 5) * 0.17) + i) * 2.2;
+    const f = {x:q[0] + wack, y:q[1], schritt:S.t * 1.3 + i * 1.7, blick:Math.PI/2,
+               haar:["#ff3f9f","#fbf7ff","#b6c9ff","#170e1e","#6bf0c0","#ffd04e","#bb6bff"][i % 7],
+               haut:["#f3c9a8","#c98d63","#8a5638","#f6d9bb","#e8bd95"][i % 5],
+               fit: ["#2a1638","#1d1030","#241540","#33193f"][i % 4],
+               hose:["#3a2a55","#2b2140","#402a4e"][i % 3],
+               akz: ["#3ef1e4","#ff5cb8","#6cf5b4","#ffd04e","#bb6bff"][i % 5],
+               acc: accVon(i), stil:["lang","kurz","zoepfe","pony","dutt"][i % 5], jacke:false};
+    figur(f, 0.92);
+    if (S.stehWer === i && S.stehZeit > 0) {
+      sprechblase(f, STEH_GESPRAECH[i % STEH_GESPRAECH.length], "#fff3f8");
+    }
+  });
+
   // Die auf dem Klo fragen
   if (S.phase === "klo" && S.klo &&
       Math.hypot(p.x - S.klo.x, p.y - S.klo.y) < 66) {
@@ -689,15 +780,15 @@ function handeln() {
     return;
   }
 
-  // Die mit der roten Jacke ansprechen
+  // Nuri ansprechen
   if (S.phase === "suche" && S.rot &&
-      Math.hypot(p.x - S.rot.x, p.y - S.rot.y) < 60) {
+      Math.hypot(p.x - S.rot.x, p.y - S.rot.y) < 62) {
     if (!alleDa) { sagen("Polly", "Moment — nicht ohne die anderen.", 2.2); return; }
-    S.rot.gefragt = true; S.rot.sagt = 3.0;
+    S.rot.gefragt = true; S.rot.sagt = 3.2;
     S.phase = "backstage";
-    sagen("Polly", "Bist du die mit der roten Jacke?", 2.2);
-    sagen("Rote Jacke", "Bin ich. Und ihr seid zu fünft und ziemlich laut.", 3.0);
-    sagen("Rote Jacke", "Hintere Tür rechts vom Floor. Sagt, Nuri schickt euch.", 3.4);
+    sagen("Polly", "Bist du die mit der roten Jacke?", 2.4);
+    sagen("Nuri", "Die häng ich seit zwei Jahren nicht mehr um. Der Name klebt.", 3.6);
+    sagen("Nuri", "Hier. Fünf Bändchen. Hintere Tür rechts vom Floor.", 3.2);
     return;
   }
 
@@ -808,7 +899,8 @@ function phaseTick(dt) {
 
   if (S.phase === "suche") {
     ziel(weg ? `${weg} ${weg===1?"Person tanzt":"Leute tanzen"} sich weg — holen!`
-             : "Rote Jacke. Irgendwo auf den Floors.");
+             : (S.rot && S.rot.entdeckt ? "Nuri gefunden — E drücken"
+                                        : "Rote Jacke. Frag dich durch."));
     return;
   }
 
@@ -860,23 +952,36 @@ function gewonnen() {
   document.getElementById("endTitel").textContent = "Ihr seid drin";
   document.getElementById("endSatz").textContent = S.verloren === 0
     ? "Keine einzige verloren, und das auf zwei Floors. Nuri hat nicht mal nachgefragt."
-    : `${S.verloren}× musstest du jemanden vom Floor zurückholen. Trotzdem: alle fünf hinter der Tür, Jacken im Locker, die Nacht fängt gerade erst an.`;
-  const reihe = document.getElementById("markenReihe");
+    : `${S.verloren}× musstest du jemanden vom Floor zurückholen. Trotzdem: fünf Bändchen, alle hinter der Tür, und die Nacht fängt gerade erst an.`;
+  // Der Zeitcode ist die Uhrzeit, zu der ihr durch die Tür seid
+  const st = Math.floor(S.uhr / 3600) % 24, mi = Math.floor(S.uhr / 60) % 60;
+  const zeit = `${String(st).padStart(2,"0")}${String(mi).padStart(2,"0")}`;
+  const reihe = document.getElementById("baenderReihe");
   reihe.innerHTML = "";
-  [S.spieler, ...S.gruppe].forEach(f => {
+  [S.spieler, ...S.gruppe].forEach((f, i) => {
     const d = document.createElement("div");
-    d.className = "mrk";
-    d.innerHTML = `<b>◆</b><span>${f.name}</span>`;
+    d.className = "band";
+    d.innerHTML = `<span class="pkt"></span><span class="nm">${f.name}</span>` +
+                  `<span class="zc">GLM·0210·${zeit}·${String(i + 1).padStart(2,"0")}</span>`;
     reihe.appendChild(d);
   });
+  S.letzteZeit = sek;
+  S.letzterCode = `GLM·0210·${zeit}`;
+  document.getElementById("eintrag").hidden = false;
+  document.getElementById("listeHinweis").hidden = true;
+  document.getElementById("instaFeld").value = "";
+  listeZeigen(null);
   document.getElementById("ende").hidden = false;
 }
 
 /* ======================= Gruppe & Tanzdrang ======================= */
 
 const TANZPUNKTE = {
-  main:   [[1200,160],[1292,224],[1176,300],[1352,140],[1424,244],[1262,382],[1386,330],[1156,228]],
-  second: [[796,386],[866,362],[930,398],[878,420],[822,356]],
+  main:   [[1216,148],[1258,196],[1336,148],[1414,206],[1200,268],[1290,246],[1372,286],
+           [1452,252],[1164,330],[1246,352],[1330,376],[1408,340],[1468,152],[1216,412],
+           [1350,418],[1132,244]],
+  second: [[790,380],[850,362],[906,392],[860,424],[800,420],[940,440],[770,410],[900,360],
+           [982,436]],
 };
 
 function gruppeTick(dt) {
@@ -952,13 +1057,25 @@ function questLeuteBauen() {
     haar:"#ffd04e", haut:"#c98d63", fit:"#241540", hose:"#2b2140",
     akz:"#6cf5b4", stil:"dutt", acc:["shades","guertel"],
   };
-  // Sie traegt als Einzige noch ihre Jacke — rot. Mehr wisst ihr nicht.
+  // Alle nennen sie "die mit der roten Jacke". Sie hat gar keine an.
   S.rot = {
-    x: 1290, y: 240, zx: 1290, zy: 240, bob: 0, gefragt: false, warte: 0,
+    x: 1390, y: 250, zx: 1390, zy: 250, bob: 0, gefragt: false, warte: 0,
+    entdeckt: false, sagt: 0,
     haar:"#170e1e", haut:"#8a5638", fit:"#1d1030", hose:"#241a38",
-    akz:"#e8312f", stil:"lang", acc:["netz","guertel"],
+    akz:"#ffd04e", stil:"lang", acc:["netz","guertel","shades"],
   };
+  S.gemurmel = 0; S.stehWer = -1; S.stehZeit = 0;
 }
+
+const SUCH_ANTWORT = [
+  "Rote Jacke? Nee, kenn ich nicht.",
+  "Die hat die Jacke doch gar nicht mehr an.",
+  "Frag mal weiter hinten, Richtung Kanzel.",
+  "Keine Ahnung, sorry.",
+  "Ach, die Nuri meinst du. Irgendwo da vorne.",
+  "Guck mal bei den Boxen.",
+  "Rote Jacke sagt hier jeder. Anhaben tut die keiner.",
+];
 
 function questTick(dt) {
   S.klo.bob += dt * 1.3;
@@ -978,6 +1095,35 @@ function questTick(dt) {
     const v = 34 * dt;
     if (darfStehen(r.x + dx/d*v, r.y, 0)) r.x += dx/d*v;
     if (darfStehen(r.x, r.y + dy/d*v, 0)) r.y += dy/d*v;
+  }
+
+  // Sich durchfragen: wer nah genug steht, murmelt was
+  const p = S.spieler;
+  S.gemurmel = Math.max(0, S.gemurmel - dt);
+  S.stehZeit = Math.max(0, (S.stehZeit || 0) - dt);
+  if (S.phase !== "suche") return;
+
+  if (!r.entdeckt && Math.hypot(p.x - r.x, p.y - r.y) < 54) {
+    r.entdeckt = true; r.sagt = 3.2;
+    sagen("Nuri", "Ihr sucht mich, oder? Ich bin Nuri.", 2.8);
+    return;
+  }
+
+  if (S.gemurmel <= 0) {
+    const raum = raumBei(p.x, p.y, 0);
+    const pkte = raum ? (TANZPUNKTE[raum.id] || []) : [];
+    for (const q of pkte) {
+      if (Math.hypot(q[0] - p.x, q[1] - p.y) < 48) {
+        S.gemurmel = 3.8;
+        sagen("Jemand", SUCH_ANTWORT[Math.floor(Math.random() * SUCH_ANTWORT.length)], 2.6);
+        return;
+      }
+    }
+    STEHPLAETZE.forEach((q, i) => {
+      if (S.gemurmel <= 0 && Math.hypot(q[0] - p.x, q[1] - p.y) < 44) {
+        S.gemurmel = 3.8; S.stehWer = i; S.stehZeit = 2.4;
+      }
+    });
   }
 }
 
@@ -1909,13 +2055,13 @@ function statisten() {
     if (k.sagt > 0) sprechblase(f, "Rote Jacke!", "#6cf5b4");
     else if (S.phase === "klo") sprechblase(f, "?", "#fff3f8");
   }
-  // Die mit der roten Jacke — als Einzige noch angezogen
+  // Die angeblich mit der roten Jacke
   if (S.rot) {
     const r = S.rot;
     const f = {x:r.x, y:r.y, schritt:r.bob, blick:Math.PI/2, haar:r.haar, haut:r.haut,
-               fit:r.fit, akz:r.akz, acc:r.acc, hose:r.hose, stil:r.stil, jacke:true};
-    figur(f, 1.0, null);
-    if (r.sagt > 0) sprechblase(f, "Na gut.", "#e8312f");
+               fit:r.fit, akz:r.akz, acc:r.acc, hose:r.hose, stil:r.stil, jacke:false};
+    figur(f, 1.0, r.entdeckt ? "#ffd04e" : null);
+    if (r.sagt > 0) sprechblase(f, r.gefragt ? "Na gut." : "Nuri.", "#ffd04e");
   }
 
   // Die Schlange: steht an, wartet, kommentiert
@@ -2093,6 +2239,80 @@ function rufAnzeigeFrisch() {
     zuckteBei = Math.round(S.rufZucken * 100);
   }
 }
+
+/* ======================= Bestenliste ======================= */
+/* Liegt im Browser der spielenden Person. Kein Server, keine Übertragung. */
+
+const LISTE_KEY = "pocketGlimmerBestenliste";
+
+function listeLesen() {
+  try {
+    const roh = localStorage.getItem(LISTE_KEY);
+    const arr = roh ? JSON.parse(roh) : [];
+    return Array.isArray(arr)
+      ? arr.filter(e => e && typeof e.sek === "number" && typeof e.handle === "string")
+      : [];
+  } catch (e) { return []; }
+}
+
+function listeSchreiben(arr) {
+  try {
+    localStorage.setItem(LISTE_KEY, JSON.stringify(arr.slice(-60)));
+    return true;
+  } catch (e) { return false; }   // privates Fenster, blockierte Daten
+}
+
+function listeZeigen(hervor) {
+  const eintraege = listeLesen()
+    .sort((a, b) => a.sek - b.sek || a.verloren - b.verloren)
+    .slice(0, 10);
+  const ol = document.getElementById("bestenliste");
+  const kopf = document.getElementById("listeKopf");
+  ol.innerHTML = "";
+  kopf.hidden = ol.hidden = eintraege.length === 0;
+  for (let i = 0; i < eintraege.length; i++) {
+    const e = eintraege[i];
+    const li = document.createElement("li");
+    if (hervor && e.id === hervor) li.className = "neu";
+    const pos = document.createElement("span"); pos.className = "pos";
+    pos.textContent = String(i + 1).padStart(2, "0");
+    const wer = document.createElement("span"); wer.className = "wer";
+    wer.textContent = "@" + e.handle;          // textContent, nie innerHTML
+    const zt = document.createElement("span"); zt.className = "zt";
+    zt.textContent = `${Math.floor(e.sek / 60)}:${String(e.sek % 60).padStart(2, "0")}`;
+    const vl = document.createElement("span"); vl.className = "vl";
+    vl.textContent = `${e.verloren}×`;
+    li.append(pos, wer, zt, vl);
+    ol.appendChild(li);
+  }
+}
+
+function eintragen() {
+  const feld = document.getElementById("instaFeld");
+  const handle = feld.value.trim()
+    .replace(/^@+/, "")
+    .replace(/[^A-Za-z0-9._]/g, "")
+    .slice(0, 30)
+    .toLowerCase();
+  if (!handle) { feld.focus(); return; }
+  const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+  const arr = listeLesen();
+  arr.push({id, handle, sek: S.letzteZeit, verloren: S.verloren, code: S.letzterCode});
+  const ok = listeSchreiben(arr);
+  document.getElementById("eintrag").hidden = true;
+  listeZeigen(id);
+  const hw = document.getElementById("listeHinweis");
+  hw.hidden = false;
+  hw.textContent = ok
+    ? "Gespeichert auf diesem Gerät. Wer auf einem anderen Telefon spielt, hat seine eigene Liste."
+    : "Konnte nicht gespeichert werden — dieser Browser lässt es nicht zu. Die Runde steht trotzdem in der Liste.";
+}
+
+document.getElementById("eintragen").addEventListener("click", eintragen);
+document.getElementById("instaFeld").addEventListener("keydown", e => {
+  e.stopPropagation();                       // sonst frisst das Spiel die Taste
+  if (e.key === "Enter") eintragen();
+});
 
 /* ======================= Schleife ======================= */
 
