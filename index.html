@@ -2390,6 +2390,41 @@ function anFormularSchicken(handle) {
   setTimeout(gescheitert, 8000);   // antwortet nichts, war es blockiert
 }
 
+function teilenText(handle) {
+  const m = Math.floor(S.letzteZeit / 60), sek = S.letzteZeit % 60;
+  return `Pocket Glimmer — @${handle}\n` +
+         `${m}:${String(sek).padStart(2, "0")} · ${S.verloren}× verloren\n` +
+         `Bändchen ${S.letzterCode}\n${SPIEL_URL}`;
+}
+
+async function ergebnisTeilen() {
+  const txt = S.teilenText || "";
+  const hw = document.getElementById("teilenHinweis");
+  const feld = document.getElementById("teilenText");
+
+  // 1. Teilen-Dialog des Telefons — dort steht WhatsApp direkt drin
+  if (navigator.share) {
+    try { await navigator.share({text: txt}); return; }
+    catch (e) { if (e && e.name === "AbortError") return; }
+  }
+  // 2. WhatsApp direkt
+  try {
+    const w = window.open("https://wa.me/?text=" + encodeURIComponent(txt), "_blank", "noopener");
+    if (w) return;
+  } catch (e) {}
+  // 3. Zwischenablage
+  try {
+    await navigator.clipboard.writeText(txt);
+    hw.hidden = false;
+    hw.textContent = "Kopiert. Jetzt in die Gruppe einfügen.";
+    return;
+  } catch (e) {}
+  // 4. Zum Markieren anzeigen
+  feld.value = txt; feld.hidden = false; feld.select();
+  hw.hidden = false;
+  hw.textContent = "Text markieren und kopieren.";
+}
+
 document.getElementById("teilenBtn").addEventListener("click", ergebnisTeilen);
 
 function eintragen() {
