@@ -3,7 +3,7 @@
 <title>Pocket Glimmer</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Instrument+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Instrument+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&family=Silkscreen:wght@400;700&display=swap">
 
 <style>
 :root{
@@ -29,6 +29,8 @@
   --disp:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;
   --ui:"Instrument Sans","Helvetica Neue",system-ui,sans-serif;
   --mono:"DM Mono",ui-monospace,"SF Mono",Menlo,monospace;
+  /* Die Pixelschrift vom Plakat, nur fuer kurze Versalzeilen */
+  --plakat:"Silkscreen",ui-monospace,Menlo,monospace;
 }
 *{box-sizing:border-box}
 html,body{height:100%;margin:0}
@@ -64,12 +66,12 @@ body[data-intro="1"][data-intro] #touch{display:none}
 }
 #marke{display:flex;align-items:baseline;gap:8px;padding:9px 13px 10px}
 #marke b{font-family:var(--disp);font-weight:800;font-size:17px;letter-spacing:-.02em;color:var(--plastik)}
-#marke span{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--grau);text-transform:uppercase}
+#marke span{font-family:var(--plakat);font-size:10px;letter-spacing:.06em;color:var(--grau);text-transform:uppercase}
 
 #crew{padding:10px 11px;display:flex;flex-direction:column;gap:7px}
 #crew h3{
-  margin:0 0 1px;font-family:var(--mono);font-size:9.5px;font-weight:500;
-  letter-spacing:.18em;text-transform:uppercase;color:var(--grau);
+  margin:0 0 1px;font-family:var(--plakat);font-size:9.5px;font-weight:400;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--grau);
 }
 .chip{display:flex;align-items:center;gap:8px;transition:opacity .25s}
 .chip .kopf{
@@ -99,13 +101,13 @@ body[data-intro="1"][data-intro] #touch{display:none}
   display:flex;flex-direction:column;gap:9px;align-items:flex-end;
 }
 #uhr{padding:9px 13px;text-align:right}
-#uhr .zeit{font-family:var(--mono);font-size:19px;font-weight:500;letter-spacing:.02em;color:var(--sahne);
+#uhr .zeit{font-family:var(--plakat);font-size:21px;font-weight:400;letter-spacing:.02em;color:var(--sahne);
   font-variant-numeric:tabular-nums}
-#uhr .meta{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;color:var(--grau);text-transform:uppercase;margin-top:2px}
-#etage{padding:7px 12px;font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;
+#uhr .meta{font-family:var(--plakat);font-size:9.5px;letter-spacing:.05em;color:var(--grau);text-transform:uppercase;margin-top:2px}
+#etage{padding:7px 12px;font-family:var(--plakat);font-size:10.5px;letter-spacing:.05em;
   text-transform:uppercase;color:var(--volt)}
 #kartewrap{padding:8px;display:flex;flex-direction:column;gap:5px;align-items:center}
-#kartewrap .kbez{font-family:var(--mono);font-size:8.5px;letter-spacing:.16em;color:var(--grau);text-transform:uppercase}
+#kartewrap .kbez{font-family:var(--plakat);font-size:8.5px;letter-spacing:.07em;color:var(--grau);text-transform:uppercase}
 #karte{display:block;border-radius:7px}
 
 #ziel{
@@ -113,7 +115,7 @@ body[data-intro="1"][data-intro] #touch{display:none}
   top:calc(14px + env(safe-area-inset-top,0px));
   padding:8px 16px 9px;text-align:center;max-width:min(78vw,440px);
 }
-#ziel .k{font-family:var(--mono);font-size:9px;letter-spacing:.2em;color:var(--plastik-tief);text-transform:uppercase}
+#ziel .k{font-family:var(--plakat);font-size:9px;letter-spacing:.09em;color:var(--plastik-tief);text-transform:uppercase}
 #ziel .t{font-family:var(--disp);font-weight:600;font-size:15px;line-height:1.25;margin-top:2px;text-wrap:balance}
 
 #rede{
@@ -123,7 +125,7 @@ body[data-intro="1"][data-intro] #touch{display:none}
   opacity:0;transition:opacity .22s;
 }
 #rede[data-an="1"]{opacity:1}
-#rede .wer{font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--volt)}
+#rede .wer{font-family:var(--plakat);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--volt)}
 #rede .was{font-size:15px;line-height:1.4;margin-top:3px;text-wrap:balance}
 
 #rufanzeige{
@@ -131,7 +133,7 @@ body[data-intro="1"][data-intro] #touch{display:none}
   bottom:calc(44px + env(safe-area-inset-bottom,0px));
   display:flex;align-items:center;gap:10px;padding:7px 15px 8px;
 }
-#rufanzeige .rl{font-family:var(--mono);font-size:9px;letter-spacing:.18em;
+#rufanzeige .rl{font-family:var(--plakat);font-size:9px;letter-spacing:.08em;
   text-transform:uppercase;color:var(--grau)}
 #rufanzeige .punkte{display:flex;gap:6px}
 #rufanzeige .punkte i{width:11px;height:11px;border-radius:50%;
@@ -214,7 +216,7 @@ body[data-touch="1"] #touch{display:block}
   text-shadow:0 2px 0 rgba(255,255,255,.5);
 }
 .dose .unter{
-  font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;
+  font-family:var(--plakat);font-size:11px;letter-spacing:.08em;text-transform:uppercase;
   margin:11px 0 0;color:#6b1f4c;
 }
 .dose .tipp{
@@ -261,7 +263,7 @@ body[data-touch="1"] #touch{display:block}
   box-shadow:0 0 7px rgba(108,245,180,.8)}
 .band .nm{flex:1;text-align:left;font-weight:500;letter-spacing:.04em}
 .band .zc{letter-spacing:.12em;color:var(--gold);font-variant-numeric:tabular-nums}
-.bandkopf{font-family:var(--mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;
+.bandkopf{font-family:var(--plakat);font-size:9px;letter-spacing:.09em;text-transform:uppercase;
   color:var(--grau);margin:18px 0 -6px}
 
 #eintrag{margin-top:16px}
@@ -464,7 +466,7 @@ body[data-touch="1"] #touch{display:block}
         an sie verlierst — ruf sie zurück, bevor die Gruppe auseinanderfällt.
       </div>
       <button id="losgehts" type="button">Klappe auf</button>
-      <p class="klein">MIT TON — die Musik geht auf, wenn die Tür aufgeht<br>Fassung 33</p>
+      <p class="klein">MIT TON — die Musik geht auf, wenn die Tür aufgeht<br>Fassung 34</p>
     </div>
   </div>
 
@@ -1767,7 +1769,7 @@ function welt() {
   cx.fillStyle = "rgba(247,231,196,.55)";
   cx.textAlign = "center";
   cx.fillText("SERA J", 1520, 204);
-  cx.font = `400 9px ${"'DM Mono', monospace"}`;
+  cx.font = `400 9px ${"'Silkscreen', monospace"}`;
   cx.fillStyle = "rgba(247,231,196,.35)";
   cx.fillText("RES NULLIUS", 1520, 186);
   cx.textAlign = "left";
@@ -1829,7 +1831,7 @@ function boden(r) {
 
   // Raumschild
   cx.save();
-  cx.font = `500 11px ${"'DM Mono', monospace"}`;
+  cx.font = `400 11px ${"'Silkscreen', monospace"}`;
   cx.fillStyle = "rgba(255,243,248,.3)";
   cx.textAlign = "left";
   cx.fillText(r.name.toUpperCase(), r.x + 10, r.y + 18);
@@ -1900,7 +1902,7 @@ function vordach() {
   const fz = 1 + Math.sin(S.t * 2.6) * 0.16;
   funkel(cx, bx + 56, by + 14, 9.5 * fz, 0.3, GLIMMER_CREME, 1.2);
   funkel(cx, bx + 160, by + 14, 7 * fz, -0.3, GLIMMER_CREME, 1.1);
-  cx.font = `400 8px ${"'DM Mono', monospace"}`;
+  cx.font = `400 8px ${"'Silkscreen', monospace"}`;
   cx.fillStyle = "rgba(255,243,248,.55)";
   cx.fillText("RES NULLIUS · 24.10.2026 · AB 24:00", bx + 108, by - 6);
   cx.textAlign = "left";
@@ -2036,7 +2038,7 @@ function moebel(m) {
   if (m.typ === "awareness") {
     // Ein Block, auf dem Awareness steht — damit klar ist, wo man hingeht
     cx.save();
-    cx.font = "700 11px 'DM Mono', monospace";
+    cx.font = "700 11px 'Silkscreen', monospace";
     cx.textAlign = "center"; cx.textBaseline = "middle";
     cx.fillStyle = "rgba(10,30,26,.55)";
     cx.fillText("AWARENESS", m.x + m.w/2 + 1, m.y + m.h/2 + 2);
@@ -2103,7 +2105,7 @@ function moebel(m) {
     cx.globalAlpha = 1;
   }
   if (m.typ === "garderobe") {
-    cx.font = `500 10px ${"'DM Mono', monospace"}`;
+    cx.font = `400 10px ${"'Silkscreen', monospace"}`;
     cx.fillStyle = "rgba(40,24,6,.75)"; cx.textAlign = "center";
     cx.fillText("GARDEROBE", m.x + m.w/2, m.y + m.h/2 + 4);
     cx.textAlign = "left";
@@ -3297,7 +3299,7 @@ function introRahmen(dt) {
       cx.fillStyle = "#57206b"; cx.fill();
       cx.fillStyle = "#ffe6a0";
       cx.textAlign = "center"; cx.textBaseline = "middle";
-      cx.font = `500 ${uh*0.36}px 'DM Mono',monospace`;
+      cx.font = `400 ${uh*0.36}px 'Silkscreen',monospace`;
       cx.fillText("STOCKMEYERSTRASSE 43  ·  OBERHAFEN  ·  AB 24:00", mx, uy + uh*0.54);
       cx.restore();
 
@@ -3311,7 +3313,7 @@ function introRahmen(dt) {
         cx.fillStyle = GLIMMER_ORANGE; cx.fill();
         cx.fillStyle = GLIMMER_CREME;
         cx.textAlign = "center"; cx.textBaseline = "middle";
-        cx.font = `500 ${lh*0.42}px 'DM Mono',monospace`;
+        cx.font = `400 ${lh*0.42}px 'Silkscreen',monospace`;
         cx.fillText("RES NULLIUS  ·  SERA J  ·  FORMULA.303", mx, ly + lh*0.54);
         cx.restore();
       }
@@ -3338,7 +3340,7 @@ function introRahmen(dt) {
     cx.globalAlpha = 0.55 + Math.sin(T*3)*0.12;
     cx.fillStyle = nacht > 0.5 ? "#fff3f8" : "#57206b";
     cx.textAlign = "center";
-    cx.font = `500 ${Math.max(10, M*0.021)}px 'DM Mono',monospace`;
+    cx.font = `400 ${Math.max(10, M*0.021)}px 'Silkscreen',monospace`;
     cx.fillText("TASTE DRUECKEN ZUM UEBERSPRINGEN", W/2, H - Math.max(22, H*0.06));
     cx.restore();
   }
