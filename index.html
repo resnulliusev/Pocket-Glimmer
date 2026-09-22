@@ -461,7 +461,7 @@ body[data-touch="1"] #touch{display:block}
         bevor die Gruppe auseinanderfällt.
       </div>
       <button id="losgehts" type="button">Klappe auf</button>
-      <p class="klein">MIT TON — die Musik geht auf, wenn die Tür aufgeht<br>Fassung 22</p>
+      <p class="klein">MIT TON — die Musik geht auf, wenn die Tür aufgeht<br>Fassung 25</p>
     </div>
   </div>
 
@@ -1336,7 +1336,8 @@ function weltGrenzen(et) {
     x1 = Math.min(x1, r.x); y1 = Math.min(y1, r.y);
     x2 = Math.max(x2, r.x + r.w); y2 = Math.max(y2, r.y + r.h);
   }
-  return (GRENZEN[et] = {x1: x1 - 70, y1: y1 - 80, x2: x2 + 70, y2: y2 + 60});
+  // Unten viel Luft: da liegen Gleis und Oberhafenkanal.
+  return (GRENZEN[et] = {x1: x1 - 70, y1: y1 - 80, x2: x2 + 70, y2: y2 + 190});
 }
 
 
@@ -1388,9 +1389,263 @@ function klinkerband(x1, y1, x2, y2) {
   cx.strokeRect(x1 - d, y1 - d, (x2 - x1) + d*2, (y2 - y1) + d*2);
 }
 
+/* Der Oberhafen suedlich der Stockmeyerstrasse, von oben gesehen:
+   Gleis, Kai mit Containerbruecken und Stapeln, dann der Kanal mit dem Frachter.
+   Dieselben Zutaten wie im Trailer, nur aus der Vogelperspektive. */
+const GLEIS_Y = 784, GLEIS_H = 42;      // Schotter und Schienen
+const KAI_Y   = 826, KAI_H   = 50;      // Kaiflaeche mit Kraenen und Containern
+const WASSER_Y = 876;                   // ab hier Wasser
+const HAF_X1 = -420, HAF_X2 = 2180;
+
+// Schotter, Schwellen und Schienen aendern sich nie: einmal malen, dann nur noch kopieren.
+let gleisBild = null;
+function gleis() {
+  if (!gleisBild) {
+    const b = HAF_X2 - HAF_X1, f = 2;
+    gleisBild = document.createElement("canvas");
+    gleisBild.width = b * f; gleisBild.height = GLEIS_H * f;
+    const g = gleisBild.getContext("2d");
+    g.scale(f, f);
+    g.fillStyle = "#2c2438"; g.fillRect(0, 0, b, GLEIS_H);
+    g.fillStyle = "rgba(255,243,248,.06)";
+    for (let i = 0; i < 300; i++) {
+      g.fillRect((i * 97.3) % b, 3 + ((i * 29.7) % (GLEIS_H - 7)), 2, 2);
+    }
+    g.fillStyle = "rgba(58,40,32,.8)";
+    for (let x = 0; x < b; x += 17) g.fillRect(x, 6, 9, GLEIS_H - 13);
+    g.strokeStyle = "rgba(214,200,232,.45)"; g.lineWidth = 3;
+    for (const y of [13, 29]) {
+      g.beginPath(); g.moveTo(0, y); g.lineTo(b, y); g.stroke();
+    }
+  }
+  cx.drawImage(gleisBild, HAF_X1, GLEIS_Y, HAF_X2 - HAF_X1, GLEIS_H);
+}
+
+/* Der Kanal mit Wellen, Lichtern und dem Frachter */
+function wasser() {
+  const wg = cx.createLinearGradient(0, WASSER_Y, 0, WASSER_Y + 330);
+  wg.addColorStop(0, "#15294c"); wg.addColorStop(1, "#0b1122");
+  cx.fillStyle = wg; cx.fillRect(HAF_X1, WASSER_Y, HAF_X2 - HAF_X1, 480);
+
+  // Der Club wirft seinen Schein aufs Wasser
+  const sp = cx.createRadialGradient(860, WASSER_Y, 10, 860, WASSER_Y, 320);
+  sp.addColorStop(0, "rgba(234,100,18,.14)"); sp.addColorStop(1, "rgba(234,100,18,0)");
+  cx.fillStyle = sp; cx.fillRect(HAF_X1, WASSER_Y, HAF_X2 - HAF_X1, 400);
+
+  // Kraeuselung, die immer wieder abreisst
+  cx.lineWidth = 2; cx.lineCap = "round";
+  for (let i = 0, y = WASSER_Y + 12; y < WASSER_Y + 330; i++, y += 17 + (i % 3) * 9) {
+    cx.strokeStyle = `rgba(178,204,255,${0.05 + (i % 3) * 0.022})`;
+    let auf = false; cx.beginPath();
+    for (let x = HAF_X1; x <= HAF_X2; x += 34) {
+      if (Math.sin(x * 0.013 + i * 2.1) < -0.45) { auf = false; continue; }
+      const v = Math.sin(S.t * 0.8 + x * 0.009 + i * 1.3) * 8;
+      auf ? cx.lineTo(x, y + v) : cx.moveTo(x, y + v);
+      auf = true;
+    }
+    cx.stroke();
+  }
+  cx.lineCap = "butt";
+
+  for (let i = 0; i < 26; i++) {                  // Lichtpunkte
+    const gx = -300 + ((i * 197.3) % 2300);
+    const gy = WASSER_Y + 20 + ((i * 71.7) % 300);
+    const fl = Math.max(0, Math.sin(S.t * 1.6 + i * 1.9));
+    if (fl > 0.4) {
+      cx.fillStyle = `rgba(255,214,150,${0.3 * fl})`;
+      cx.fillRect(gx, gy, 5 + fl * 5, 2);
+    }
+  }
+
+  // Das andere Ufer, weit hinten
+  cx.fillStyle = "#241c3c";
+  cx.fillRect(HAF_X1, 1150, HAF_X2 - HAF_X1, 260);
+  for (let i = 0, x = HAF_X1; x < HAF_X2; i++) {
+    const b = 90 + ((i * 53) % 130), h = 24 + ((i * 37) % 54);
+    cx.fillRect(x, 1150 - h, b, h + 4);
+    x += b + 10 + ((i * 29) % 30);
+  }
+  for (let i = 0; i < 24; i++) {
+    const lx = -360 + ((i * 213) % 2500);
+    const fl = 0.45 + 0.55 * Math.abs(Math.sin(S.t * 1.4 + i));
+    cx.fillStyle = `rgba(255,190,110,${0.8 * fl})`;
+    cx.fillRect(lx, 1142, 5, 5);
+  }
+
+  frachter(812, 890);
+}
+
+/* Ein Frachter liegt laengsseits, Bug nach Westen */
+function frachter(x, y0) {
+  const L = 430, B = 44;
+  const y = y0 + Math.sin(S.t * 0.5) * 2.5;
+  cx.save();
+  cx.shadowColor = "rgba(0,0,0,.5)"; cx.shadowBlur = 18; cx.shadowOffsetY = 7;
+  cx.beginPath();
+  cx.moveTo(x, y + B/2);                              // Bugspitze
+  cx.quadraticCurveTo(x + 42, y, x + 104, y);
+  cx.lineTo(x + L - 16, y);
+  cx.quadraticCurveTo(x + L, y, x + L, y + 12);
+  cx.lineTo(x + L, y + B - 12);
+  cx.quadraticCurveTo(x + L, y + B, x + L - 16, y + B);
+  cx.lineTo(x + 104, y + B);
+  cx.quadraticCurveTo(x + 42, y + B, x, y + B/2);
+  cx.closePath();
+  cx.fillStyle = "#3d3229"; cx.fill();
+  cx.restore();
+  cx.strokeStyle = "rgba(247,231,196,.22)"; cx.lineWidth = 2;   // Schanzkleid
+  cx.stroke();
+  cx.fillStyle = "rgba(255,243,248,.07)";                        // Deck
+  cx.fillRect(x + 104, y + 4, L - 120, 4);
+  cx.fillStyle = "#241d1a";                                      // Laderaeume
+  for (let i = 0; i < 3; i++) {
+    cx.fillRect(x + 126 + i * 84, y + 9, 70, B - 18);
+    cx.fillStyle = "rgba(255,243,248,.09)";
+    cx.fillRect(x + 126 + i * 84, y + 9, 70, 3);
+    cx.fillStyle = "#241d1a";
+  }
+  rundRect(cx, x + L - 82, y + 5, 66, B - 10, 9);                // Aufbau achtern
+  cx.fillStyle = "#4d4038"; cx.fill();
+  cx.fillStyle = "rgba(255,214,120,.8)";
+  cx.fillRect(x + L - 70, y + 13, 17, 8); cx.fillRect(x + L - 44, y + 13, 17, 8);
+  cx.fillStyle = "rgba(120,255,160,.9)";                         // Positionslichter
+  cx.beginPath(); cx.arc(x + 14, y + B/2 - 11, 4.5, 0, 7); cx.fill();
+  cx.fillStyle = "rgba(255,110,110,.9)";
+  cx.beginPath(); cx.arc(x + 14, y + B/2 + 11, 4.5, 0, 7); cx.fill();
+}
+
+/* Containerbruecke von oben: Portal auf dem Kai, Ausleger ueber dem Wasser */
+function containerbruecke(x) {
+  const y0 = KAI_Y + 3, aus = y0 + KAI_H - 18;   // aus = Anfang des Auslegers
+  cx.fillStyle = "#2f3a4e";                       // Kranbahn im Kai
+  cx.fillRect(x - 64, y0, 128, 5);
+  cx.fillRect(x - 64, y0 + KAI_H - 15, 128, 5);
+
+  // Ausleger ueber den Kanal, als Fachwerk
+  cx.strokeStyle = "#54617e"; cx.lineWidth = 5;
+  cx.beginPath();
+  cx.moveTo(x - 13, aus); cx.lineTo(x - 13, aus + 132);
+  cx.moveTo(x + 13, aus); cx.lineTo(x + 13, aus + 132);
+  cx.stroke();
+  cx.strokeStyle = "rgba(84,97,126,.75)"; cx.lineWidth = 2.5;
+  cx.beginPath();
+  for (let k = 0; k < 9; k++) {
+    cx.moveTo(x - 13, aus + k * 15); cx.lineTo(x + 13, aus + (k + 1) * 15);
+    cx.moveTo(x + 13, aus + k * 15); cx.lineTo(x - 13, aus + (k + 1) * 15);
+  }
+  cx.stroke();
+  cx.fillStyle = "#3f4c66";                       // Auslegerspitze
+  cx.fillRect(x - 15, aus + 128, 30, 9);
+
+  // Gegenausleger landseits
+  cx.fillStyle = "#4a5570";
+  cx.fillRect(x - 11, y0 - 44, 22, 46);
+  // Portaltraeger und Fuesse
+  cx.fillRect(x - 58, y0 - 4, 116, 15);
+  cx.fillRect(x - 58, aus - 1, 116, 15);
+  cx.fillStyle = "#2f3a4e";
+  for (const fx of [x - 56, x + 40]) { cx.fillRect(fx, y0 - 2, 16, 13); cx.fillRect(fx, aus + 1, 16, 13); }
+  // Maschinenhaus mit Fenstern
+  rundRect(cx, x - 28, y0 + 14, 56, 30, 8);
+  cx.fillStyle = "#5d6a88"; cx.fill();
+  cx.fillStyle = "rgba(255,214,120,.6)";
+  cx.fillRect(x - 20, y0 + 20, 14, 7); cx.fillRect(x - 2, y0 + 20, 14, 7);
+  cx.fillStyle = GLIMMER_ORANGE;                  // Farbring, wie im Hafen ueblich
+  cx.fillRect(x - 58, y0 + 8, 116, 4);
+
+  // Laufkatze mit Spreader am Seil
+  const kz = (Math.sin(S.t * 0.45 + x * 0.01) + 1) / 2;
+  const ky = aus + 14 + kz * 104;
+  cx.strokeStyle = "rgba(230,222,245,.5)"; cx.lineWidth = 1.5;
+  cx.beginPath(); cx.moveTo(x - 8, ky); cx.lineTo(x - 8, ky + 16);
+  cx.moveTo(x + 8, ky); cx.lineTo(x + 8, ky + 16); cx.stroke();
+  cx.fillStyle = "#3f4c66"; cx.fillRect(x - 13, ky - 7, 26, 11);
+  cx.fillStyle = GLIMMER_ORANGE; cx.fillRect(x - 16, ky + 14, 32, 8);
+
+  const bl = 0.4 + 0.6 * Math.abs(Math.sin(S.t * 2.4 + x));
+  cx.fillStyle = `rgba(255,120,90,${bl})`;
+  cx.beginPath(); cx.arc(x, y0 - 49, 5, 0, 7); cx.fill();
+}
+
+const CONT_FARBEN = ["#c04d2c", "#8a7a5e", "#41647d", "#a37c33", "#645670", "#cd6328"];
+function containerstapel(x, y, n, seed) {
+  for (let i = 0; i < n; i++) {
+    const bx = x + (i % 4) * 41, by = y + Math.floor(i / 4) * 23;
+    const f = CONT_FARBEN[(i * 5 + seed) % CONT_FARBEN.length];
+    cx.fillStyle = f; cx.fillRect(bx, by, 38, 20);
+    cx.fillStyle = "rgba(255,255,255,.14)"; cx.fillRect(bx, by, 38, 4);
+    cx.fillStyle = "rgba(0,0,0,.28)"; cx.fillRect(bx, by + 17, 38, 3);
+    cx.strokeStyle = "rgba(0,0,0,.3)"; cx.lineWidth = 1;
+    for (let r = 1; r < 5; r++) {
+      cx.beginPath(); cx.moveTo(bx + r * 7.6, by); cx.lineTo(bx + r * 7.6, by + 20); cx.stroke();
+    }
+  }
+}
+
+/* Die Kaiflaeche mit allem, was darauf steht */
+function kai() {
+  cx.fillStyle = "#38304c";
+  cx.fillRect(HAF_X1, KAI_Y, HAF_X2 - HAF_X1, KAI_H);
+  cx.fillStyle = "rgba(255,243,248,.045)";
+  for (let x = HAF_X1; x < HAF_X2; x += 46) cx.fillRect(x, KAI_Y, 1, KAI_H);
+  // Kaikante und ihr Schatten aufs Wasser
+  cx.fillStyle = "#4a3e63"; cx.fillRect(HAF_X1, WASSER_Y - 9, HAF_X2 - HAF_X1, 9);
+  cx.fillStyle = "rgba(255,243,248,.16)"; cx.fillRect(HAF_X1, WASSER_Y - 9, HAF_X2 - HAF_X1, 3);
+  cx.fillStyle = "rgba(12,8,20,.45)"; cx.fillRect(HAF_X1, WASSER_Y, HAF_X2 - HAF_X1, 5);
+  for (let x = -180; x < 2000; x += 124) {                    // Poller
+    cx.fillStyle = "#241c33";
+    cx.beginPath(); cx.ellipse(x, WASSER_Y - 18, 8, 6, 0, 0, 7); cx.fill();
+    cx.fillStyle = "rgba(255,243,248,.2)";
+    cx.beginPath(); cx.ellipse(x - 2, WASSER_Y - 20, 3.5, 2.5, 0, 0, 7); cx.fill();
+  }
+  containerstapel(946, KAI_Y + 5, 8, 1);
+  containerstapel(1192, KAI_Y + 5, 8, 4);
+  containerstapel(1420, KAI_Y + 5, 4, 2);
+  containerstapel(374, KAI_Y + 5, 8, 5);
+  containerbruecke(848);
+  containerbruecke(1330);
+  containerbruecke(178);
+}
+
+/* Alle paar Takte faehrt eine S-Bahn vorbei, abwechselnd in beide Richtungen */
+function sbahn() {
+  const takt = 24, fahrt = 7.4;
+  const nr = Math.floor(S.t / takt), p = (S.t % takt) / fahrt;
+  if (p > 1) return;
+  const links = nr % 2 === 0;
+  const strecke = 3000, start = links ? 2340 : -1680;
+  const kopfX = start + (links ? -1 : 1) * p * strecke;
+  const cy = GLEIS_Y + 21;
+
+  const lg = cx.createRadialGradient(kopfX, cy, 6, kopfX, cy, 210);
+  lg.addColorStop(0, "rgba(255,235,170,.34)"); lg.addColorStop(1, "rgba(255,235,170,0)");
+  cx.fillStyle = lg; cx.fillRect(kopfX - 220, cy - 120, 440, 240);
+
+  for (let i = 0; i < 4; i++) {
+    const wx = (links ? kopfX + i * 200 : kopfX - 186 - i * 200);
+    if (wx > HAF_X2 || wx + 186 < HAF_X1) continue;
+    cx.save();
+    cx.shadowColor = "rgba(0,0,0,.5)"; cx.shadowBlur = 12; cx.shadowOffsetY = 5;
+    rundRect(cx, wx, cy - 16, 186, 32, 11);
+    cx.fillStyle = i === 0 ? "#c4402a" : "#b8371f"; cx.fill();
+    cx.restore();
+    cx.fillStyle = "rgba(247,231,196,.75)";
+    cx.fillRect(wx + 10, cy - 5, 166, 10);
+    cx.fillStyle = "rgba(40,28,34,.5)";
+    cx.fillRect(wx + 34, cy - 3, 26, 6); cx.fillRect(wx + 128, cy - 3, 26, 6);
+    cx.fillStyle = "rgba(255,214,120,.9)";
+    for (let f = 0; f < 6; f++) {
+      cx.fillRect(wx + 22 + f * 26, cy - 13, 15, 6);
+      cx.fillRect(wx + 22 + f * 26, cy + 7,  15, 6);
+    }
+  }
+}
+
 function welt() {
   const et = S.etage;
   const rms = RAEUME.filter(r => r.et === et);
+
+  if (et === 0) { wasser(); kai(); gleis(); sbahn(); }
 
   /* --- Puderdose: die Schale um das Haus --- */
   let minX=1e9, minY=1e9, maxX=-1e9, maxY=-1e9;
@@ -2639,7 +2894,7 @@ function rahmen(dt) {
   const schmal = B.w < 760;
   const g = weltGrenzen(S.etage);
   // So weit heranfahren, dass die Etage die Hoehe fuellt — kein Schwarz mehr unten
-  const fuellt = (B.h / (g.y2 - g.y1)) * (schmal ? 1.15 : 1);
+  const fuellt = (B.h / (g.y2 - g.y1)) * (schmal ? 1.325 : 1);
   const basis = schmal ? B.w / 430 : Math.min(B.w / 620, B.h / 430);
   const zoom = Math.max(0.7, Math.min(schmal ? 1.9 : 2.4, Math.max(basis, fuellt)));
   kam.zoom += (zoom - kam.zoom) * 0.1;
@@ -2839,6 +3094,30 @@ function introRahmen(dt) {
   cx.fillStyle = mische("#54d8d2", "#1d1436", nacht);
   cx.fillRect(0, H - (H*0.16)*bodenA, W, H*0.16);
 
+  // Containerbruecken am anderen Ufer — der Oberhafen im Hintergrund
+  const kranA = weich(spanne(T, 0.9, 2.1));
+  if (kranA > 0) {
+    cx.save(); cx.globalAlpha = kranA;
+    cx.strokeStyle = mische("#7ba2bd", "#6a5c86", nacht);
+    cx.lineWidth = Math.max(3, M * 0.013); cx.lineCap = "round"; cx.lineJoin = "round";
+    const kran = (x, h) => {
+      const fuss = hy + H * 0.035, top = fuss - h;
+      cx.beginPath();
+      cx.moveTo(x - h*0.22, fuss);        cx.lineTo(x - h*0.22, top + h*0.44);
+      cx.moveTo(x + h*0.22, fuss);        cx.lineTo(x + h*0.22, top + h*0.44);
+      cx.moveTo(x - h*0.28, top + h*0.44); cx.lineTo(x + h*0.28, top + h*0.44);
+      cx.moveTo(x, top + h*0.44);          cx.lineTo(x, top);
+      cx.moveTo(x, top);                   cx.lineTo(x - h*0.8,  top + h*0.26);
+      cx.moveTo(x, top);                   cx.lineTo(x + h*0.44, top + h*0.15);
+      cx.stroke();
+      const bl = 0.4 + 0.6 * Math.abs(Math.sin(T * 2.6 + x));
+      cx.fillStyle = `rgba(255,120,90,${bl * Math.max(nacht, 0.4)})`;
+      cx.beginPath(); cx.arc(x, top - M*0.014, M*0.012, 0, 7); cx.fill();
+    };
+    kran(W*0.12, M*0.30); kran(W*0.88, M*0.24);
+    cx.lineCap = "butt"; cx.restore();
+  }
+
   // Die Halle hinter dem Schild
   const hausA = weich(spanne(T, 0.8, 1.9));
   if (hausA > 0) {
@@ -2846,6 +3125,48 @@ function introRahmen(dt) {
     const hb = Math.min(W * 0.66, M * 1.25), hh = M * 0.34;
     klinkerRiss(mx - hb/2, hy + H*0.02, hb, hh * (0.6 + 0.4*hausA),
                 mische("#b05e42", "#55291f", nacht));
+    cx.restore();
+  }
+
+  // Die S-Bahn faehrt am Haus vorbei
+  const bahnP = spanne(T, 2.2, 5.7);
+  if (bahnP > 0 && bahnP < 1) {
+    const by = H * 0.752, bh = H * 0.045, wb = W * 0.26;
+    cx.strokeStyle = mische("#a2937a", "#3a2f4e", nacht); cx.lineWidth = 3;
+    cx.beginPath();
+    cx.moveTo(0, by + bh + H*0.009); cx.lineTo(W, by + bh + H*0.009); cx.stroke();
+    const kopf = W*1.2 - bahnP * (W*1.2 + 4*(wb + W*0.012) + W*0.25);
+    for (let i = 0; i < 4; i++) {
+      const wx = kopf + i * (wb + W*0.012);
+      if (wx > W + 20 || wx + wb < -20) continue;
+      cx.save();
+      cx.shadowColor = "rgba(0,0,0,.35)"; cx.shadowBlur = 10; cx.shadowOffsetY = 5;
+      rundRect(cx, wx, by, wb, bh, bh*0.3);
+      cx.fillStyle = mische(i === 0 ? "#e2573a" : "#d34a2e", "#b8371f", nacht); cx.fill();
+      cx.restore();
+      cx.fillStyle = mische("#fff3e6", "#f7e7c4", nacht);
+      cx.fillRect(wx + bh*0.14, by + bh*0.66, wb - bh*0.28, bh*0.13);
+      cx.fillStyle = `rgba(255,214,120,${0.5 + 0.45*nacht})`;
+      for (let f = 0; f < 6; f++) {
+        cx.fillRect(wx + bh*0.32 + f * (wb - bh*0.64)/6, by + bh*0.2, (wb - bh*0.64)/10, bh*0.3);
+      }
+    }
+  }
+
+  // Eine Schute zieht ueber das Wasser
+  if (bodenA > 0.6) {
+    const sw = W * 0.28, sy = H - (H*0.16)*bodenA + H*0.05 + Math.sin(T*1.2)*2;
+    const sx = W*1.05 - spanne(T, 1.4, 6.2) * (W*1.3);
+    cx.save(); cx.globalAlpha = Math.min(1, (bodenA - 0.6) * 3);
+    rundRect(cx, sx, sy, sw, H*0.036, H*0.017);
+    cx.fillStyle = mische("#6b5c4c", "#3a2f28", nacht); cx.fill();
+    cx.fillStyle = mische("#8a7a66", "#4d4038", nacht);          // Deck
+    cx.fillRect(sx + sw*0.08, sy + H*0.006, sw*0.6, H*0.024);
+    rundRect(cx, sx + sw*0.73, sy - H*0.018, sw*0.22, H*0.03, H*0.009);
+    cx.fillStyle = mische("#a2917c", "#5d5044", nacht); cx.fill();
+    cx.fillStyle = `rgba(255,214,120,${0.45 + 0.45*nacht})`;
+    cx.fillRect(sx + sw*0.77, sy - H*0.011, sw*0.06, H*0.009);
+    cx.fillRect(sx + sw*0.86, sy - H*0.011, sw*0.06, H*0.009);
     cx.restore();
   }
 
