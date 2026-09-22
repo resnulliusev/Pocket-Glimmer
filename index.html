@@ -12,9 +12,9 @@
   --nacht-2:#1e1433;
   --asphalt:#241a36;
   /* Polly-Plastik */
-  --plastik:#ff8ec6;
-  --plastik-tief:#e05ca2;
-  --plastik-hell:#ffdcef;
+  --plastik:#ff9a3f;
+  --plastik-tief:#d4560d;
+  --plastik-hell:#ffe3c4;
   --sahne:#fff3f8;
   /* Räume, aus dem echten Grundriss */
   --club2:#b06cff;
@@ -50,7 +50,7 @@ body[data-intro="1"] #hud{opacity:0}
 body[data-intro="1"][data-intro] #touch{display:none}
 .panel{
   background:linear-gradient(160deg,rgba(40,24,58,.92),rgba(24,14,38,.92));
-  border:1.5px solid rgba(255,158,203,.34);
+  border:1.5px solid rgba(255,150,64,.34);
   border-radius:16px;
   box-shadow:0 10px 26px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,243,248,.14);
   backdrop-filter:blur(7px);
@@ -135,10 +135,10 @@ body[data-intro="1"][data-intro] #touch{display:none}
   text-transform:uppercase;color:var(--grau)}
 #rufanzeige .punkte{display:flex;gap:6px}
 #rufanzeige .punkte i{width:11px;height:11px;border-radius:50%;
-  background:rgba(255,255,255,.14);box-shadow:inset 0 0 0 1.5px rgba(255,158,203,.38);
+  background:rgba(255,255,255,.14);box-shadow:inset 0 0 0 1.5px rgba(255,150,64,.38);
   transition:background .18s, box-shadow .18s}
 #rufanzeige .punkte i[data-voll="1"]{background:var(--plastik);
-  box-shadow:0 0 9px rgba(255,142,198,.75), inset 0 0 0 1.5px rgba(255,220,239,.9)}
+  box-shadow:0 0 9px rgba(255,150,70,.75), inset 0 0 0 1.5px rgba(255,228,200,.9)}
 #rufanzeige .sperre{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;
   color:var(--gold);font-variant-numeric:tabular-nums}
 #rufanzeige[data-sperre="1"]{border-color:rgba(255,208,78,.55)}
@@ -157,8 +157,8 @@ body[data-intro="1"][data-intro] #touch{display:none}
   text-align:center;padding:0 16px;
 }
 kbd{
-  font-family:var(--mono);font-size:10px;background:rgba(255,158,203,.16);
-  border:1px solid rgba(255,158,203,.3);border-radius:4px;padding:1px 5px;color:var(--plastik-hell);
+  font-family:var(--mono);font-size:10px;background:rgba(255,150,64,.16);
+  border:1px solid rgba(255,150,64,.3);border-radius:4px;padding:1px 5px;color:var(--plastik-hell);
 }
 
 /* ---------- Touch ---------- */
@@ -169,8 +169,8 @@ body[data-touch="1"] #touch{display:block}
   left:calc(env(safe-area-inset-left,0px) + min(17vw,120px));
   bottom:calc(env(safe-area-inset-bottom,0px) + 10vh);
   width:min(130px,31vw);height:min(130px,31vw);border-radius:50%;pointer-events:auto;
-  background:radial-gradient(circle at 50% 42%,rgba(255,158,203,.16),rgba(255,158,203,.05));
-  border:1.5px solid rgba(255,158,203,.3);
+  background:radial-gradient(circle at 50% 42%,rgba(255,150,64,.16),rgba(255,150,64,.05));
+  border:1.5px solid rgba(255,150,64,.3);
 }
 #knubbel{position:absolute;left:29%;top:29%;width:42%;height:42%;border-radius:50%;
   background:radial-gradient(circle at 36% 30%,var(--plastik-hell),var(--plastik-tief));
@@ -196,7 +196,7 @@ body[data-touch="1"] #touch{display:block}
 #deckel[hidden]{display:none!important}
 .dose{
   width:min(560px,100%);border-radius:30px;padding:26px 24px 24px;text-align:center;
-  background:linear-gradient(165deg,#ffdcef 0%,#ffa3d0 40%,#ec7ab2 100%);
+  background:linear-gradient(165deg,#ffe3c4 0%,#ffab52 40%,#e8823a 100%);
   box-shadow:0 26px 60px rgba(0,0,0,.6), inset 0 3px 0 rgba(255,255,255,.62), inset 0 -8px 0 rgba(0,0,0,.14);
   position:relative;overflow:hidden;color:#3d0f2b;
 }
@@ -227,7 +227,7 @@ body[data-touch="1"] #touch{display:block}
   margin:17px auto 0;max-width:400px;background:rgba(255,255,255,.52);border-radius:13px;
   padding:11px 13px;text-align:left;font-family:var(--mono);font-size:11px;line-height:1.75;color:#521538;
 }
-.zettel b{color:#8d1f5c}
+.zettel b{color:#8d3d13}
 #losgehts{
   margin-top:19px;pointer-events:auto;cursor:pointer;
   font-family:var(--disp);font-weight:800;font-size:19px;letter-spacing:.01em;
@@ -273,7 +273,7 @@ body[data-touch="1"] #touch{display:block}
 #eintrag .at{font-family:var(--mono);font-size:15px;color:var(--plastik);flex:none}
 #instaFeld{
   flex:1;min-width:0;padding:9px 12px;border-radius:10px;
-  border:1.5px solid rgba(255,158,203,.4);background:rgba(20,12,30,.7);
+  border:1.5px solid rgba(255,150,64,.4);background:rgba(20,12,30,.7);
   color:var(--sahne);font-family:var(--mono);font-size:13px;letter-spacing:.03em;
 }
 #instaFeld::placeholder{color:rgba(255,243,248,.3)}
@@ -282,9 +282,9 @@ body[data-touch="1"] #touch{display:block}
   flex:none;cursor:pointer;border:none;border-radius:10px;padding:9px 16px;
   font-family:var(--disp);font-weight:800;font-size:13px;color:#3d0f2b;
   background:linear-gradient(170deg,var(--plastik-hell),var(--plastik-tief));
-  box-shadow:0 4px 0 #a6417a;
+  box-shadow:0 4px 0 #9c4108;
 }
-#eintragen:active{transform:translateY(2px);box-shadow:0 2px 0 #a6417a}
+#eintragen:active{transform:translateY(2px);box-shadow:0 2px 0 #9c4108}
 #eintragen:focus-visible{outline:3px solid var(--volt);outline-offset:2px}
 
 .bestenliste{
@@ -296,7 +296,7 @@ body[data-touch="1"] #touch{display:block}
   background:rgba(255,255,255,.05);font-family:var(--mono);font-size:11.5px;
   color:#e4d6ee;
 }
-.bestenliste li.neu{background:rgba(255,142,198,.22);box-shadow:inset 0 0 0 1.5px rgba(255,142,198,.55)}
+.bestenliste li.neu{background:rgba(255,150,70,.22);box-shadow:inset 0 0 0 1.5px rgba(255,150,70,.55)}
 .bestenliste .pos{color:var(--grau);flex:none;font-variant-numeric:tabular-nums}
 .bestenliste .wer{flex:1;min-width:0;text-align:left;overflow:hidden;
   text-overflow:ellipsis;white-space:nowrap;color:var(--plastik-hell)}
@@ -329,7 +329,7 @@ body[data-touch="1"] #touch{display:block}
 #teilenBtn:focus-visible{outline:3px solid var(--volt);outline-offset:2px}
 #teilenText{
   width:100%;max-width:330px;margin:9px auto 0;display:block;resize:none;
-  padding:9px 11px;border-radius:10px;border:1.5px solid rgba(255,158,203,.35);
+  padding:9px 11px;border-radius:10px;border:1.5px solid rgba(255,150,64,.35);
   background:rgba(20,12,30,.7);color:var(--sahne);
   font-family:var(--mono);font-size:10.5px;line-height:1.5;
 }
@@ -340,8 +340,8 @@ body[data-touch="1"] #touch{display:block}
 .nochmal{margin-top:20px;cursor:pointer;font-family:var(--disp);font-weight:800;font-size:15px;
   padding:11px 26px;border-radius:12px;border:none;color:#3d0f2b;
   background:linear-gradient(170deg,var(--plastik-hell),var(--plastik-tief));
-  box-shadow:0 6px 0 #a6417a}
-.nochmal:active{transform:translateY(3px);box-shadow:0 3px 0 #a6417a}
+  box-shadow:0 6px 0 #9c4108}
+.nochmal:active{transform:translateY(3px);box-shadow:0 3px 0 #9c4108}
 
 @media (max-width:720px){
   /* Gruppe als Koepfe nebeneinander statt als Liste */
@@ -461,7 +461,7 @@ body[data-touch="1"] #touch{display:block}
         bevor die Gruppe auseinanderfällt.
       </div>
       <button id="losgehts" type="button">Klappe auf</button>
-      <p class="klein">MIT TON — die Musik geht auf, wenn die Tür aufgeht<br>Fassung 20</p>
+      <p class="klein">MIT TON — die Musik geht auf, wenn die Tür aufgeht<br>Fassung 22</p>
     </div>
   </div>
 
@@ -636,20 +636,20 @@ const BEGEHBAR = [...RAEUME, ...TUEREN.map(t => ({...t, tuer:true}))];
 /* ======================= Figuren ======================= */
 
 const CREW = [
-  {id:"polly", name:"Polly",  haar:"#ff3f9f", haut:"#f3c9a8", fit:"#2a1638", hose:"#3a2a55",
-   akz:"#3ef1e4", augen:"#2f6fb0", lippen:"#ff5fa8", stil:"lang",
+  {id:"polly", name:"Polly",  haar:"#ff7a2e", haut:"#f3c9a8", fit:"#2a1638", hose:"#3a2a55",
+   akz:"#3ef1e4", augen:"#2f6fb0", lippen:"#e8722c", stil:"lang",
    acc:["shades","netz","harness","stulpen"]},
   {id:"vinca", name:"Vinca",  haar:"#fbf7ff", haut:"#c98d63", fit:"#150e22", hose:"#241a38",
-   akz:"#ff5cb8", augen:"#7a4a2a", lippen:"#c2356f", stil:"kurz",
+   akz:"#ff8a2e", augen:"#7a4a2a", lippen:"#a8481a", stil:"kurz",
    acc:["visor","harness","guertel","tasche"]},
   {id:"mio",   name:"Mio",    haar:"#b6c9ff", haut:"#f6d9bb", fit:"#241540", hose:"#3d2a5c",
-   akz:"#6cf5b4", augen:"#3f8f7a", lippen:"#ef6a9c", stil:"zoepfe",
+   akz:"#6cf5b4", augen:"#3f8f7a", lippen:"#e07a34", stil:"zoepfe",
    acc:["kopfhoerer","netz","shades","stulpen"]},
   {id:"kris",  name:"Kris",   haar:"#170e1e", haut:"#8a5638", fit:"#2e1a3c", hose:"#2b2140",
-   akz:"#ffd04e", augen:"#40241a", lippen:"#b82f5e", stil:"pony",
+   akz:"#ffd04e", augen:"#40241a", lippen:"#9e3f12", stil:"pony",
    acc:["buckethat","harness","guertel","tasche"]},
   {id:"suki",  name:"Suki",   haar:"#6bf0c0", haut:"#e8bd95", fit:"#1f1236", hose:"#402a4e",
-   akz:"#bb6bff", augen:"#6b3f9a", lippen:"#ff7ab8", stil:"dutt",
+   akz:"#bb6bff", augen:"#6b3f9a", lippen:"#e8823a", stil:"dutt",
    acc:["brille","netz","guertel","tasche"]},
 ];
 
@@ -1070,10 +1070,10 @@ function gruppeSpawnen(start) {
     weg: [{x:850, y:700}, {x:800, y:604}, {x:706, y:592}, {x:630, y:570}, {x:600, y:520}],
     leute: Array.from({length:n}, (_, k) => ({
       ox:(k - n/2) * 15 + (Math.random()*7-3), oy:(Math.random()*16-8),
-      haar: ["#ff5fae","#f2f0ff","#c9d4ff","#1a1020","#8ef5cd","#ffd76e","#b06cff"][Math.floor(Math.random()*7)],
+      haar: ["#ff8a3a","#f2f0ff","#c9d4ff","#1a1020","#8ef5cd","#ffd76e","#b06cff"][Math.floor(Math.random()*7)],
       haut: ["#f3c9a8","#c98d63","#8a5638","#f6d9bb","#e8bd95"][Math.floor(Math.random()*5)],
       fit:  ["#2a1638","#1d1030","#241540","#33193f"][Math.floor(Math.random()*4)],
-      akz:  ["#3ef1e4","#ff5cb8","#6cf5b4","#ffd04e","#bb6bff"][Math.floor(Math.random()*5)],
+      akz:  ["#3ef1e4","#ff8a2e","#6cf5b4","#ffd04e","#bb6bff"][Math.floor(Math.random()*5)],
       acc:  accVon(Math.floor(Math.random()*9)),
       hose: ["#3a2a55","#2b2140","#402a4e","#241a38"][Math.floor(Math.random()*4)],
       stil: ["lang","kurz","zoepfe","pony","dutt"][Math.floor(Math.random()*5)],
@@ -1169,11 +1169,11 @@ function questTick(dt) {
 function schlangeBauen() {
   S.schlange = SCHLANGE_PLAETZE.map(([x, y], i) => ({
     x, y, bob: Math.random()*6, mault: 0, gemeckert: false,
-    haar: ["#ff3f9f","#fbf7ff","#b6c9ff","#170e1e","#ffd04e"][i % 5],
+    haar: ["#ff7a2e","#fbf7ff","#b6c9ff","#170e1e","#ffd04e"][i % 5],
     haut: ["#f3c9a8","#8a5638","#c98d63","#f6d9bb","#a86a44"][i % 5],
     fit:  ["#2a1638","#1d1030","#241540","#33193f","#2e1a3c"][i % 5],
     hose: ["#3a2a55","#2b2140","#402a4e"][i % 3],
-    akz:  ["#3ef1e4","#ff5cb8","#6cf5b4","#bb6bff","#5f8cff"][i % 5],
+    akz:  ["#3ef1e4","#ff8a2e","#6cf5b4","#bb6bff","#5f8cff"][i % 5],
     acc:  accVon(i + 2),
     stil: ["lang","zoepfe","dutt","pony","kurz"][i % 5],
   }));
@@ -1405,8 +1405,8 @@ function welt() {
 
   // Bonbonplastik
   const sg = cx.createLinearGradient(sx, sy, sx + sw*0.16, sy + sh);
-  sg.addColorStop(0, "#ffe6f4"); sg.addColorStop(.32, "#ffaeda");
-  sg.addColorStop(.7, "#ff7cbf"); sg.addColorStop(1, "#dd579e");
+  sg.addColorStop(0, "#fff0dc"); sg.addColorStop(.32, "#ffb567");
+  sg.addColorStop(.7, "#f5822a"); sg.addColorStop(1, "#cc5410");
   cx.save();
   cx.shadowColor = "rgba(0,0,0,.55)"; cx.shadowBlur = 46; cx.shadowOffsetY = 20;
   rundRect(cx, sx, sy, sw, sh, 52);
@@ -1428,7 +1428,7 @@ function welt() {
   rundRect(cx, sx + 10, sy + 10, sw - 20, sh - 20, 44);
   cx.strokeStyle = "rgba(255,255,255,.62)"; cx.lineWidth = 4; cx.stroke();
   rundRect(cx, sx + 17, sy + 17, sw - 34, sh - 34, 38);
-  cx.strokeStyle = "rgba(214,92,158,.32)"; cx.lineWidth = 2; cx.stroke();
+  cx.strokeStyle = "rgba(212,104,40,.32)"; cx.lineWidth = 2; cx.stroke();
 
   // Glitzer im Plastik
   for (let i = 0; i < 30; i++) {
@@ -1440,12 +1440,12 @@ function welt() {
   }
 
   // Scharnier oben, Herzverschluss unten
-  cx.fillStyle = "rgba(150,46,102,.34)";
+  cx.fillStyle = "rgba(148,72,20,.34)";
   for (let i = -1; i <= 1; i++) {
     cx.beginPath(); cx.arc(sx + sw/2 + i*44, sy + 15, 9, 0, 7); cx.fill();
   }
   herz(cx, sx + sw/2, sy + sh - 22, 17, "rgba(255,255,255,.75)");
-  herz(cx, sx + sw/2, sy + sh - 23, 11, "rgba(255,140,200,.85)");
+  herz(cx, sx + sw/2, sy + sh - 23, 11, "rgba(255,150,70,.85)");
 
   klinkerband(minX, minY, maxX, maxY);
 
@@ -1575,7 +1575,7 @@ function waende(r, seiten = ["n","o","s","w"]) {
       cx.shadowColor = "rgba(0,0,0,.5)"; cx.shadowBlur = 9; cx.shadowOffsetY = 5;
       rundRect(cx, x, y, w, h, 4);
       const g = cx.createLinearGradient(x, y, x, y + h);
-      g.addColorStop(0, "#ffd9ec"); g.addColorStop(.4, "#ff9fd0"); g.addColorStop(1, "#cc6aa2");
+      g.addColorStop(0, "#ffdcb0"); g.addColorStop(.4, "#ffa64d"); g.addColorStop(1, "#c05a14");
       cx.fillStyle = g; cx.fill();
       cx.restore();
       cx.fillStyle = "rgba(255,243,248,.42)";
@@ -1588,20 +1588,22 @@ function vordach() {
   const t = TUEREN.find(t => t.haupt);
   cx.save();
   cx.shadowColor = "rgba(0,0,0,.5)"; cx.shadowBlur = 10; cx.shadowOffsetY = 4;
-  rundRect(cx, t.x - 106, t.y - 50, 216, 30, 6);
+  // Das Schild haengt neben der Tuer auf dem Vorplatz, nicht auf der Wand
+  const bx = t.x + 39, by = t.y - 36;
+  rundRect(cx, bx, by, 216, 30, 6);
   cx.fillStyle = GLIMMER_ORANGE; cx.fill();
   cx.restore();
   cx.strokeStyle = "rgba(247,231,196,.6)"; cx.lineWidth = 1.5;
-  rundRect(cx, t.x - 103, t.y - 47, 210, 24, 5); cx.stroke();
+  rundRect(cx, bx + 3, by + 3, 210, 24, 5); cx.stroke();
   cx.font = `800 17px ${"'Bricolage Grotesque', sans-serif"}`;
   cx.fillStyle = GLIMMER_CREME; cx.textAlign = "center";
-  cx.fillText("Glimmer", t.x + 2, t.y - 29);
+  cx.fillText("Glimmer", bx + 108, by + 21);
   const fz = 1 + Math.sin(S.t * 2.6) * 0.16;
-  funkel(cx, t.x - 48, t.y - 36, 9.5 * fz, 0.3, GLIMMER_CREME, 1.2);
-  funkel(cx, t.x + 52, t.y - 36, 7 * fz, -0.3, GLIMMER_CREME, 1.1);
+  funkel(cx, bx + 56, by + 14, 9.5 * fz, 0.3, GLIMMER_CREME, 1.2);
+  funkel(cx, bx + 160, by + 14, 7 * fz, -0.3, GLIMMER_CREME, 1.1);
   cx.font = `400 8px ${"'DM Mono', monospace"}`;
-  cx.fillStyle = "rgba(255,243,248,.5)";
-  cx.fillText("RES NULLIUS · 24.10.2026 · AB 24:00", t.x + 2, t.y - 55);
+  cx.fillStyle = "rgba(255,243,248,.55)";
+  cx.fillText("RES NULLIUS · 24.10.2026 · AB 24:00", bx + 108, by - 6);
   cx.textAlign = "left";
 
   // Gleise auf dem Vorplatz — der Oberhafen war Bahngelaende
@@ -1723,7 +1725,7 @@ function moebel(m) {
   cx.shadowColor = "rgba(0,0,0,.55)"; cx.shadowBlur = 11; cx.shadowOffsetY = 6;
   rundRect(cx, m.x, m.y, m.w, m.h, 6);
   let f = "#4a3a63";
-  if (m.typ === "tresen" || m.typ === "kasse") f = "#7b4a6b";
+  if (m.typ === "tresen" || m.typ === "kasse") f = "#7b5238";
   if (m.typ === "box" || m.typ === "dj" || m.typ === "djq") f = "#241a33";
   if (m.typ === "tisch") f = "#6a4c78";
   if (m.typ === "beet") f = "#2d4a3c";
@@ -1734,7 +1736,7 @@ function moebel(m) {
   if (m.typ === "becken") f = "#7b6a90";
   if (m.typ === "sofa") f = "#4a3a63";
   if (m.typ === "accwc") f = "#5d4576";
-  if (m.typ === "wand") f = "#c96a9e";
+  if (m.typ === "wand") f = "#c5701e";
   if (m.typ === "foh") f = "#241a33";
   cx.fillStyle = f; cx.fill();
   cx.restore();
@@ -1747,7 +1749,7 @@ function moebel(m) {
     for (let i = 0; i < (m.h > m.w ? 3 : 2); i++) {
       const cxx = m.x + m.w/2, cyy = m.y + m.h*(i+1)/((m.h > m.w ? 3 : 2)+1);
       cx.beginPath(); cx.arc(cxx, cyy, Math.min(m.w, m.h)*0.24*wow, 0, 7); cx.fill();
-      cx.fillStyle = "rgba(255,158,203,.35)";
+      cx.fillStyle = "rgba(255,150,64,.35)";
       cx.beginPath(); cx.arc(cxx, cyy, Math.min(m.w, m.h)*0.1*wow, 0, 7); cx.fill();
       cx.fillStyle = "rgba(20,12,28,.95)";
     }
@@ -1840,7 +1842,7 @@ function figur(f, groesseF = 1, leuchten = null) {
   const y = f.y - hopp;
   const acc = f.acc || [];
   const akz = f.akz || "#3ef1e4";
-  const haar = f.haar || "#ff3f9f";
+  const haar = f.haar || "#ff7a2e";
   const stil = f.stil || "lang";
   const mann = !!f.mann;
 
@@ -2066,11 +2068,11 @@ function figur(f, groesseF = 1, leuchten = null) {
       cx.beginPath(); cx.moveTo(f.x - 6.4*s, y - 20.8*s); cx.lineTo(f.x - 8.2*s, y - 22*s); cx.stroke();
       cx.beginPath(); cx.moveTo(f.x + 6.4*s, y - 20.8*s); cx.lineTo(f.x + 8.2*s, y - 22*s); cx.stroke();
       cx.lineCap = "butt";
-      cx.fillStyle = f.lippen || "#e0407e";
+      cx.fillStyle = f.lippen || "#c85a2a";
       cx.beginPath(); cx.ellipse(f.x, y - 13.8*s, 3*s, 1.9*s, 0, 0, 7); cx.fill();
       cx.fillStyle = "rgba(255,255,255,.62)";
       cx.beginPath(); cx.ellipse(f.x - 0.8*s, y - 14.4*s, 1.2*s, 0.55*s, 0, 0, 7); cx.fill();
-      cx.fillStyle = "rgba(255,110,170,.3)";
+      cx.fillStyle = "rgba(240,150,90,.3)";
       cx.beginPath(); cx.arc(f.x - 7*s, y - 16.4*s, 2.2*s, 0, 7); cx.fill();
       cx.beginPath(); cx.arc(f.x + 7*s, y - 16.4*s, 2.2*s, 0, 7); cx.fill();
     }
@@ -2097,7 +2099,7 @@ function figur(f, groesseF = 1, leuchten = null) {
     cx.beginPath(); cx.moveTo(f.x - 1.2*s, y - 19.6*s); cx.lineTo(f.x + 1.2*s, y - 19.6*s); cx.stroke();
     cx.fillStyle = "rgba(255,255,255,.4)";
     rundRect(cx, f.x - 7.8*s, y - 20.8*s, 2.6*s, 1.2*s, 0.6*s); cx.fill();
-    cx.fillStyle = f.lippen || "#e0407e";
+    cx.fillStyle = f.lippen || "#c85a2a";
     cx.beginPath(); cx.ellipse(f.x, y - 13.8*s, 3*s, 1.9*s, 0, 0, 7); cx.fill();
   }
 
@@ -2110,7 +2112,7 @@ function figur(f, groesseF = 1, leuchten = null) {
     cx.fillStyle = "rgba(255,255,255,.55)";
     rundRect(cx, f.x - 7.6*s, y - 21*s, 5.2*s, 1.3*s, 0.65*s); cx.fill();
     if (schautHer) {
-      cx.fillStyle = f.lippen || "#e0407e";
+      cx.fillStyle = f.lippen || "#c85a2a";
       cx.beginPath(); cx.ellipse(f.x, y - 13.8*s, 3*s, 1.9*s, 0, 0, 7); cx.fill();
     }
   }
@@ -2185,11 +2187,11 @@ function statisten() {
   STEHPLAETZE.forEach((q, i) => {
     const wack = Math.sin(S.t * (1.1 + (i % 5) * 0.17) + i) * 2.2;
     const f = {x:q[0] + wack, y:q[1], schritt:S.t * 1.3 + i * 1.7, blick:Math.PI/2,
-               haar:["#ff3f9f","#fbf7ff","#b6c9ff","#170e1e","#6bf0c0","#ffd04e","#bb6bff"][i % 7],
+               haar:["#ff7a2e","#fbf7ff","#b6c9ff","#170e1e","#6bf0c0","#ffd04e","#bb6bff"][i % 7],
                haut:["#f3c9a8","#c98d63","#8a5638","#f6d9bb","#e8bd95"][i % 5],
                fit: ["#2a1638","#1d1030","#241540","#33193f"][i % 4],
                hose:["#3a2a55","#2b2140","#402a4e"][i % 3],
-               akz: ["#3ef1e4","#ff5cb8","#6cf5b4","#ffd04e","#bb6bff"][i % 5],
+               akz: ["#3ef1e4","#ff8a2e","#6cf5b4","#ffd04e","#bb6bff"][i % 5],
                acc: accVon(i), stil:["lang","kurz","zoepfe","pony","dutt"][i % 5], jacke:false};
     figur(f, 0.92);
     if (S.stehWer === i && S.stehZeit > 0) {
@@ -2239,7 +2241,7 @@ function tanzende() {
       const hop = Math.abs(Math.sin(S.t * 4.4 + i)) * (2 + S.puls * 4);
       const f = {x:p[0] + Math.sin(S.t*0.7 + i)*7, y:p[1] - hop,
                  schritt:S.t*5 + i*2, blick:Math.PI/2,
-                 haar:["#ff5fae","#f2f0ff","#c9d4ff","#8ef5cd","#ffd76e","#b06cff"][i % 6],
+                 haar:["#ff8a3a","#f2f0ff","#c9d4ff","#8ef5cd","#ffd76e","#b06cff"][i % 6],
                  haut:["#f3c9a8","#c98d63","#8a5638","#e8bd95"][i % 4],
                  fit:"#1d1030", akz:r.ton, acc:accVon(i), hose:"#2b2140",
                  stil:["lang","kurz","zoepfe","dutt","pony"][i % 5], jacke:false};
@@ -2273,7 +2275,7 @@ function funken() {
     if (f.leben <= 0) continue;
     cx.save();
     if (f.art === "ruf") {
-      cx.strokeStyle = `rgba(255,158,203,${f.leben * .8})`; cx.lineWidth = 3;
+      cx.strokeStyle = `rgba(255,150,64,${f.leben * .8})`; cx.lineWidth = 3;
       cx.beginPath(); cx.arc(f.x, f.y, f.r, 0, 7); cx.stroke();
     } else {
       cx.globalAlpha = f.leben;
@@ -2310,7 +2312,7 @@ function minikarte() {
     mapCx.beginPath(); mapCx.arc(px(z.x), py(z.y), 3, 0, 7); mapCx.fill();
   }
   for (const g of S.gruppe) {
-    mapCx.fillStyle = g.dabei ? "rgba(159,245,196,.85)" : "#ff5fae";
+    mapCx.fillStyle = g.dabei ? "rgba(159,245,196,.85)" : "#ff8a3a";
     mapCx.beginPath(); mapCx.arc(px(g.x), py(g.y), 2, 0, 7); mapCx.fill();
   }
   mapCx.fillStyle = "#fff3f8";
@@ -2670,7 +2672,7 @@ function rahmen(dt) {
   const alle = [S.spieler, ...S.gruppe].filter(f => f.spielbar || f.dabei || f.et === S.etage);
   alle.sort((a, b) => a.y - b.y);
   for (const f of alle) {
-    figur(f, f.spielbar ? 1.08 : 1, f.spielbar ? "#ff9ecb" : (f.tanzt ? "#ffd76e" : null));
+    figur(f, f.spielbar ? 1.08 : 1, f.spielbar ? "#ff9f45" : (f.tanzt ? "#ffd76e" : null));
     if (f.tanzt) sprechblase(f, "gleich!", "#ffd76e");
     if (!f.dabei && !f.tanzt && S.phase === "sammeln") sprechblase(f, f.name, "#fff3f8");
   }
@@ -2735,7 +2737,7 @@ function wortmarke(x, y, gr) {
   cx.strokeStyle = "#57206b"; cx.lineWidth = gr * 0.32; cx.strokeText(txt, x, y);
   cx.strokeStyle = "#ffffff"; cx.lineWidth = gr * 0.15; cx.strokeText(txt, x, y);
   const g = cx.createLinearGradient(0, y - gr*0.62, 0, y + gr*0.62);
-  g.addColorStop(0, "#ff3f9f"); g.addColorStop(.44, "#ff86c6");
+  g.addColorStop(0, "#ff7a2e"); g.addColorStop(.44, "#ffa85c");
   g.addColorStop(.56, "#ffe6a0"); g.addColorStop(1, "#eeab2e");
   cx.fillStyle = g; cx.fillText(txt, x, y);
   cx.restore();
@@ -2785,7 +2787,7 @@ function klinkerRiss(x, y, b, h, farbe) {
   }
 
   // Graffiti — der Bau ist von oben bis unten besprüht
-  const bunt = ["rgba(255,214,72,.55)","rgba(120,224,182,.5)","rgba(255,120,180,.45)",
+  const bunt = ["rgba(255,214,72,.55)","rgba(120,224,182,.5)","rgba(240,150,90,.45)",
                 "rgba(140,170,255,.45)","rgba(255,160,90,.5)"];
   for (let i = 0; i < 9; i++) {
     cx.fillStyle = bunt[i % bunt.length];
@@ -2853,7 +2855,7 @@ function introRahmen(dt) {
     for (let i = 0; i < 4; i++) {
       const a = -Math.PI/2 + Math.sin(T * 2.2 + i * 1.4) * 0.7;
       const lg = cx.createLinearGradient(mx, hy, mx + Math.cos(a)*M, hy + Math.sin(a)*M);
-      lg.addColorStop(0, ["rgba(95,140,255,.5)","rgba(176,108,255,.5)","rgba(62,241,228,.5)","rgba(255,158,203,.5)"][i]);
+      lg.addColorStop(0, ["rgba(95,140,255,.5)","rgba(176,108,255,.5)","rgba(62,241,228,.5)","rgba(255,150,64,.5)"][i]);
       lg.addColorStop(1, "rgba(0,0,0,0)");
       cx.fillStyle = lg;
       cx.beginPath(); cx.moveTo(mx, hy);
@@ -2895,7 +2897,7 @@ function introRahmen(dt) {
     cx.restore();
     rundRect(cx, bx + bh*0.075, by + bh*0.075, bw - bh*0.15, bh - bh*0.15, bh*0.3);
     const pg = cx.createLinearGradient(0, by, 0, by + bh);
-    pg.addColorStop(0, "#ffe2f3"); pg.addColorStop(1, "#ff8fca");
+    pg.addColorStop(0, "#ffeed6"); pg.addColorStop(1, "#ff9c42");
     cx.fillStyle = pg; cx.fill();
     wortmarke(mx, by + bh*0.52, bh*0.44);
 
