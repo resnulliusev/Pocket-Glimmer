@@ -461,7 +461,7 @@ body[data-touch="1"] #touch{display:block}
         an sie verlierst — ruf sie zurück, bevor die Gruppe auseinanderfällt.
       </div>
       <button id="losgehts" type="button">Klappe auf</button>
-      <p class="klein">MIT TON — die Musik geht auf, wenn die Tür aufgeht<br>Fassung 25</p>
+      <p class="klein">MIT TON — die Musik geht auf, wenn die Tür aufgeht<br>Fassung 27</p>
     </div>
   </div>
 
@@ -525,7 +525,8 @@ const sanft = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 const RAEUME = [
   // --- Glimmer, alles auf einer Ebene. Nach dem Grundriss von Niki. ---
-  {id:"wc",     et:0, x:40,   y:100, w:250, h:420, name:"Toiletten",        art:"innen",  ton:"#9ff5c4", filter:800},
+  {id:"wcf",    et:0, x:40,   y:100, w:250, h:198, name:"Toiletten FLINTA*", art:"innen",  ton:"#ff8ac4", filter:800},
+  {id:"wca",    et:0, x:40,   y:306, w:250, h:214, name:"Toiletten All Genders", art:"innen", ton:"#9ff5c4", filter:800},
   {id:"chill",  et:0, x:300,  y:95,  w:230, h:155, name:"Chill Area",       art:"innen",  ton:"#ffb86b", filter:1300},
   {id:"flur",   et:0, x:300,  y:250, w:405, h:130, name:"Hallway",          art:"innen",  ton:"#8f7ab0", filter:1700},
   {id:"lockers",et:0, x:425,  y:385, w:280, h:120, name:"Lockers",          art:"innen",  ton:"#ffd76e", filter:1200},
@@ -547,7 +548,8 @@ const TUEREN = [
   {et:0, x:560,  y:493, w:90, h:24},              // Entrance → Lockers
   {et:0, x:560,  y:373, w:90, h:24},              // Lockers → Hallway
   {et:0, x:340,  y:240, w:140, h:24},             // Hallway → Chill Area
-  {et:0, x:286,  y:288, w:26, h:66},              // Hallway → Toiletten
+  {et:0, x:286,  y:252, w:26, h:42},              // Hallway → Toiletten FLINTA*
+  {et:0, x:286,  y:312, w:26, h:42},              // Hallway → Toiletten All Genders
   {et:0, x:694,  y:258, w:24, h:54},              // Hallway → Bar Area
   {et:0, x:705,  y:236, w:185, h:20},             // Bar Area → Bar Area Süd, offen
   {et:0, x:900,  y:236, w:80,  h:20},             // Bar Area → Schleuse
@@ -562,13 +564,14 @@ const MOEBEL = [
   {et:0, x:46,   y:116, w:52,  h:40,  typ:"kabine"},
   {et:0, x:46,   y:164, w:52,  h:40,  typ:"kabine"},
   {et:0, x:46,   y:212, w:52,  h:40,  typ:"kabine"},
-  {et:0, x:46,   y:300, w:52,  h:40,  typ:"kabine"},
-  {et:0, x:46,   y:348, w:52,  h:40,  typ:"kabine"},
-  {et:0, x:46,   y:396, w:52,  h:40,  typ:"kabine"},
   {et:0, x:186,  y:130, w:92,  h:28,  typ:"becken"},
-  {et:0, x:176,  y:424, w:100, h:76,  typ:"accwc"},
-  // Flur: Awareness-Counter
-  {et:0, x:340,  y:330, w:92,  h:26,  typ:"kasse"},
+  {et:0, x:46,   y:322, w:52,  h:40,  typ:"kabine"},
+  {et:0, x:46,   y:370, w:52,  h:40,  typ:"kabine"},
+  {et:0, x:46,   y:418, w:52,  h:40,  typ:"kabine"},
+  {et:0, x:186,  y:336, w:92,  h:28,  typ:"becken"},
+  {et:0, x:176,  y:440, w:100, h:76,  typ:"accwc"},
+  // Awareness-Counter, rechts vor der Chill Area
+  {et:0, x:496,  y:258, w:96,  h:28,  typ:"awareness"},
   // Chill Area: Sofas rundherum
   {et:0, x:312,  y:104, w:84,  h:28,  typ:"sofa"},
   {et:0, x:446,  y:104, w:72,  h:28,  typ:"sofa"},
@@ -1609,12 +1612,14 @@ function kai() {
 
 /* Alle paar Takte faehrt eine S-Bahn vorbei, abwechselnd in beide Richtungen */
 function sbahn() {
-  const takt = 24, fahrt = 7.4;
+  const LEN = 3 * 200 + 186;                     // vom Kopf bis zum letzten Wagen
+  const VON = HAF_X2 + 40, BIS = HAF_X1 - LEN - 40;
+  const strecke = VON - BIS;                     // so lang, dass der Zug ganz raus ist
+  const takt = 26, fahrt = 8.6;
   const nr = Math.floor(S.t / takt), p = (S.t % takt) / fahrt;
   if (p > 1) return;
   const links = nr % 2 === 0;
-  const strecke = 3000, start = links ? 2340 : -1680;
-  const kopfX = start + (links ? -1 : 1) * p * strecke;
+  const kopfX = links ? VON - p * strecke : (HAF_X1 - 40) + p * strecke;
   const cy = GLEIS_Y + 21;
 
   const lg = cx.createRadialGradient(kopfX, cy, 6, kopfX, cy, 210);
@@ -1911,21 +1916,12 @@ function tresenlicht() {
 
 // Damit die Toiletten auch als Toiletten zu erkennen sind
 function wcDeko() {
-  const r = R.wc;
   cx.save();
-  const zonen = [
-    {y:100, h:172, name:"FLINTA*",      ton:"rgba(255,110,190,.10)"},
-    {y:272, h:140, name:"ALLGENDER",    ton:"rgba(110,200,255,.10)"},
-    {y:412, h:108, name:"ACC. · STAFF", ton:"rgba(150,245,196,.10)"},
-  ];
-  cx.font = "500 9px 'DM Mono', monospace";
-  for (const z of zonen) {
-    cx.fillStyle = z.ton;
-    cx.fillRect(r.x, z.y, r.w, z.h);
-    cx.strokeStyle = "rgba(255,243,248,.16)"; cx.lineWidth = 1;
-    cx.beginPath(); cx.moveTo(r.x, z.y + z.h); cx.lineTo(r.x + r.w, z.y + z.h); cx.stroke();
-    cx.fillStyle = "rgba(255,243,248,.5)";
-    cx.fillText(z.name, r.x + 112, z.y + 15);
+  // Zwei getrennte Toiletten, jede mit eigener Tuer vom Hallway.
+  // Den Namen schreibt schon waende() an die Wand, hier nur der Farbton.
+  for (const [r, ton] of [[R.wcf, "rgba(255,110,190,.15)"], [R.wca, "rgba(110,200,255,.15)"]]) {
+    cx.fillStyle = ton;
+    cx.fillRect(r.x, r.y, r.w, r.h);
   }
 
   // Kabinen: Tuerblatt, Besetztzeichen, Schuessel, Spuelkasten
@@ -1943,8 +1939,7 @@ function wcDeko() {
   }
 
   // Waschbecken mit Spiegel
-  const b = MOEBEL.find(m => m.typ === "becken");
-  if (b) {
+  for (const b of MOEBEL.filter(m => m.typ === "becken")) {
     cx.fillStyle = "rgba(186,224,255,.2)";
     cx.fillRect(b.x + 4, b.y - 21, b.w - 8, 17);
     cx.strokeStyle = "rgba(255,255,255,.4)"; cx.lineWidth = 1;
@@ -1993,11 +1988,28 @@ function moebel(m) {
   if (m.typ === "accwc") f = "#5d4576";
   if (m.typ === "wand") f = "#c5701e";
   if (m.typ === "foh") f = "#241a33";
+  if (m.typ === "awareness") f = "#2f7d6a";
   cx.fillStyle = f; cx.fill();
   cx.restore();
   cx.fillStyle = "rgba(255,243,248,.22)";
   rundRect(cx, m.x + 2, m.y + 2, m.w - 4, 3, 1.5); cx.fill();
 
+  if (m.typ === "awareness") {
+    // Ein Block, auf dem Awareness steht — damit klar ist, wo man hingeht
+    cx.save();
+    cx.font = "700 11px 'DM Mono', monospace";
+    cx.textAlign = "center"; cx.textBaseline = "middle";
+    cx.fillStyle = "rgba(10,30,26,.55)";
+    cx.fillText("AWARENESS", m.x + m.w/2 + 1, m.y + m.h/2 + 2);
+    cx.fillStyle = "rgba(223,255,244,.95)";
+    cx.fillText("AWARENESS", m.x + m.w/2, m.y + m.h/2 + 1);
+    cx.textAlign = "left"; cx.textBaseline = "alphabetic";
+    // kleine Lampe, die ruhig pulst
+    const pl = 0.5 + 0.5 * Math.abs(Math.sin(S.t * 1.1));
+    cx.fillStyle = `rgba(159,245,196,${0.5 + 0.45 * pl})`;
+    cx.beginPath(); cx.arc(m.x + 10, m.y + m.h / 2, 3.4, 0, 7); cx.fill();
+    cx.restore();
+  }
   if (m.typ === "box" || m.typ === "djq") {
     const wow = 1 + S.puls * 0.1;
     cx.fillStyle = "rgba(20,12,28,.95)";
