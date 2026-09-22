@@ -217,6 +217,9 @@ body[data-touch="1"] #touch{display:block}
   font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;
   margin:11px 0 0;color:#6b1f4c;
 }
+.dose .tipp{
+  font-size:13px;color:#6b1f4c;font-style:italic;margin-top:10px;
+}
 .dose .fliess{
   font-size:14.5px;line-height:1.55;margin:15px auto 0;max-width:42ch;color:#4a1234;text-wrap:pretty;
 }
@@ -262,6 +265,7 @@ body[data-touch="1"] #touch{display:block}
   color:var(--grau);margin:18px 0 -6px}
 
 #eintrag{margin-top:16px}
+#preise{color:var(--gold);opacity:.9;max-width:330px;margin-left:auto;margin-right:auto}
 #eintrag .eingabe{
   display:flex;align-items:center;gap:7px;margin-top:8px;max-width:330px;
   margin-left:auto;margin-right:auto;
@@ -397,8 +401,8 @@ body[data-touch="1"] #touch{display:block}
 
     <div id="obenRechts">
       <div class="panel" id="uhr">
-        <div class="zeit" id="zeitAnzeige">23:14</div>
-        <div class="meta">ERÖFFNUNG · 140 BPM</div>
+        <div class="zeit" id="zeitAnzeige">00:14</div>
+        <div class="meta">RES NULLIUS · 140 BPM</div>
       </div>
       <div class="panel" id="etage">Entrance</div>
       <div class="panel" id="kartewrap">
@@ -435,35 +439,35 @@ body[data-touch="1"] #touch{display:block}
     <div class="dose">
       <div class="scharnier"><i></i><i></i><i></i></div>
       <h1>Pocket Glimmer</h1>
-      <p class="unter">Stockmeyerstraße 43 · Oberhafen · 02.10.2026 · 23:14</p>
+      <p class="unter">Stockmeyerstraße 43 · Oberhafen · 24.10.2026 · ab 24:00</p>
       <p class="fliess">
-        Das glimmer sitzt in einem alten Klinkerbau im Oberhafen — Backstein, Rundbogentore,
-        von oben bis unten besprüht. 548 Quadratmeter, vorher hieß der Laden hier Moloch.
-        Heute ist Eröffnung. Und heute Nacht ist das Haus eine Puderdose.
+        Das Glimmer sitzt in einem alten Klinkerbau im Oberhafen — Backstein, Rundbogentore,
+        von oben bis unten besprüht. 548 Quadratmeter auf zwei Floors.
+        Heute Nacht schmeißt Res Nullius hier eine Party. Und das Haus ist eine Puderdose.
       </p>
       <p class="fliess">
-        Du bist Polly. Ihr wollt ins Backstage. Der Weg dahin geht so: Jacken in die
-        Lockers, dann jemanden auf den Toiletten fragen. Die schickt euch weiter zu
-        jemandem mit einer <b>roten Jacke</b> — irgendwo auf den Floors.
-        <b>Ihr wisst nicht, wer das ist.</b> Und anhaben tut die Jacke dort niemand.
-        Also: durchfragen.
+        Du bist Polly, und ihr seid zu fünft. Ihr wollt <b>Sera J</b> sehen — und zwar
+        nicht von hinten aus der Menge, sondern im <b>Backstage</b>. Keine von euch hat
+        eine Ahnung, wie man da reinkommt. Also: reingehen, durchfragen, zusammenbleiben.
+      </p>
+      <p class="fliess tipp">
+        Kleiner Tipp: Auf dem Klo weiß meistens jemand was.
       </p>
       <div class="zettel">
         <b>WASD</b> oder Pfeiltasten — laufen<br>
-        <b>E</b> oder Leertaste — rufen, reden, Jacken abgeben<br>
+        <b>E</b> oder Leertaste — rufen, reden, abgeben<br>
         Nur <b>zwei Rufe hintereinander</b>. Wer weiterdrückt, ist 10 Sekunden heiser.<br>
-        <b>E</b> an den Lockers — Jacken abgeben<br>
-        Auf dem Floor halten sie es keine drei Sekunden aus — ruf sie zurueck,<br>
-        bevor die Gruppe auseinanderfaellt.
+        Auf den Floors halten sie es keine drei Sekunden aus — ruf sie zurück,<br>
+        bevor die Gruppe auseinanderfällt.
       </div>
       <button id="losgehts" type="button">Klappe auf</button>
-      <p class="klein">MIT TON — die Musik geht auf, wenn die Tür aufgeht<br>Fassung 12</p>
+      <p class="klein">MIT TON — die Musik geht auf, wenn die Tür aufgeht<br>Fassung 20</p>
     </div>
   </div>
 
   <div id="ende" hidden>
     <div class="panel endkarte">
-      <h2 id="endTitel">Alle fünf Jacken hängen</h2>
+      <h2 id="endTitel">Ihr seid drin</h2>
       <p class="satz" id="endSatz"></p>
       <p class="bandkopf">Backstage · Eintrittscode</p>
       <div class="baender" id="baenderReihe"></div>
@@ -476,6 +480,10 @@ body[data-touch="1"] #touch{display:block}
           <button id="eintragen" type="button">Eintragen</button>
         </div>
       </div>
+
+      <p class="hinweis" id="preise">
+        Platz 1: 2× Community Lane + freier Eintritt · Platz 2 &amp; 3: je 2× Community Lane
+      </p>
 
       <p class="bandkopf" id="listeKopf" hidden>Bestenliste · die schnellsten zehn</p>
       <ol class="bestenliste" id="bestenliste" hidden></ol>
@@ -510,13 +518,13 @@ const mapCx = mapCv.getContext("2d");
 const sanft = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 /* =======================================================================
-   GRUNDRISS — nachgebaut aus dem Plan des glimmer, Stockmeyerstraße 43.
+   GRUNDRISS — nachgebaut aus dem Plan des Glimmer, Stockmeyerstraße 43.
    Eine Ebene: Entrance · Lockers · Hallway · Chill Area · Toiletten ·
    Bar Area · Second Floor · Main Floor · Backstage
    ======================================================================= */
 
 const RAEUME = [
-  // --- glimmer, alles auf einer Ebene. Nach dem Grundriss von Niki. ---
+  // --- Glimmer, alles auf einer Ebene. Nach dem Grundriss von Niki. ---
   {id:"wc",     et:0, x:40,   y:100, w:250, h:420, name:"Toiletten",        art:"innen",  ton:"#9ff5c4", filter:800},
   {id:"chill",  et:0, x:300,  y:95,  w:230, h:155, name:"Chill Area",       art:"innen",  ton:"#ffb86b", filter:1300},
   {id:"flur",   et:0, x:300,  y:250, w:405, h:130, name:"Hallway",          art:"innen",  ton:"#8f7ab0", filter:1700},
@@ -646,7 +654,7 @@ const CREW = [
 ];
 
 const S = {
-  phase:"start", t:0, uhr:23*3600+14*60, etage:0,
+  phase:"start", t:0, uhr:14*60, etage:0,
   spieler:null, gruppe:[], spur:[], npcs:[], funken:[], schlange:[], meckerKuehl:0,
   beat:0, puls:0, takt:0, cutoff:300, cutoffZiel:300,
   verloren:0, abgegeben:0, startZeit:0, rufKuehl:0,
@@ -671,7 +679,7 @@ function aufstellen() {
   S.spur = []; S.npcs = []; S.funken = [];
   S.verloren = 0; S.abgegeben = 0; S.etage = 0; S.abgabeLaeuft = false; S.imClub = false;
   S.rufe = RUF_MAX; S.rufeLade = 0; S.rufSperre = 0; S.rufZucken = 0;
-  S.uhr = 23*3600 + 14*60;
+  S.uhr = 14*60;          // die Tür geht um 24:00 auf
   S.phase = "sammeln"; S.startZeit = performance.now();
   for (let i=0;i<5;i++) gruppeSpawnen(true);
   schlangeBauen();
@@ -788,29 +796,13 @@ function handeln() {
     sagen("Polly", "Erst alle fünf. Ohne die anderen fange ich nicht an.", 2.6); return;
   }
 
-  // Publikum, das nicht tanzt
-  STEHPLAETZE.forEach((q, i) => {
-    const wack = Math.sin(S.t * (1.1 + (i % 5) * 0.17) + i) * 2.2;
-    const f = {x:q[0] + wack, y:q[1], schritt:S.t * 1.3 + i * 1.7, blick:Math.PI/2,
-               haar:["#ff3f9f","#fbf7ff","#b6c9ff","#170e1e","#6bf0c0","#ffd04e","#bb6bff"][i % 7],
-               haut:["#f3c9a8","#c98d63","#8a5638","#f6d9bb","#e8bd95"][i % 5],
-               fit: ["#2a1638","#1d1030","#241540","#33193f"][i % 4],
-               hose:["#3a2a55","#2b2140","#402a4e"][i % 3],
-               akz: ["#3ef1e4","#ff5cb8","#6cf5b4","#ffd04e","#bb6bff"][i % 5],
-               acc: accVon(i), stil:["lang","kurz","zoepfe","pony","dutt"][i % 5], jacke:false};
-    figur(f, 0.92);
-    if (S.stehWer === i && S.stehZeit > 0) {
-      sprechblase(f, STEH_GESPRAECH[i % STEH_GESPRAECH.length], "#fff3f8");
-    }
-  });
-
   // Die auf dem Klo fragen
   if (S.phase === "klo" && S.klo &&
       Math.hypot(p.x - S.klo.x, p.y - S.klo.y) < 66) {
     if (!alleDa) { sagen("Polly", "Erst alle fünf herholen.", 2.2); return; }
     S.klo.gefragt = true; S.klo.sagt = 3.4;
     S.phase = "suche";
-    sagen("Polly", "Wir wollen ins Backstage. Weißt du, wie?", 2.6);
+    sagen("Polly", "Wir wollen zu Sera J ins Backstage. Weißt du, wie?", 2.8);
     sagen("Unbekannte", "Nicht von mir. Fragt die mit der roten Jacke.", 3.0);
     sagen("Polly", "Welche rote Jacke?", 1.8);
     sagen("Unbekannte", "Die Einzige, die ihre noch anhat. Irgendwo auf den Floors.", 3.6);
@@ -825,7 +817,7 @@ function handeln() {
     S.phase = "backstage";
     sagen("Polly", "Bist du die mit der roten Jacke?", 2.4);
     sagen("Nuri", "Die häng ich seit zwei Jahren nicht mehr um. Der Name klebt.", 3.6);
-    sagen("Nuri", "Hier. Fünf Bändchen. Hintere Tür rechts vom Floor.", 3.2);
+    sagen("Nuri", "Hier. Fünf Bändchen. Hintere Tür rechts vom Floor — Sera ist schon da.", 3.8);
     return;
   }
 
@@ -913,7 +905,7 @@ function phaseTick(dt) {
   }
 
   if (S.phase === "einlass") {
-    ziel("Am Türsteher vorbei ins glimmer");
+    ziel("Am Türsteher vorbei ins Glimmer");
     if (Math.hypot(p.x - TUERSTEHER.x, p.y - TUERSTEHER.y) < 62 && !weg) {
       S.phase = "jacken";
       sagen("Security", "Fünf?", 1.2);
@@ -943,7 +935,7 @@ function phaseTick(dt) {
 
   if (S.phase === "backstage") {
     ziel(weg ? `${weg} fehlt noch — ohne alle kommt ihr nicht rein`
-             : "Durch die Tür ins Backstage");
+             : "Durch die Tür ins Backstage, zu Sera J");
     const drin = raumBei(p.x, p.y, 0);
     if (drin && drin.id === "backstage" && !weg) gewonnen();
     return;
@@ -988,8 +980,8 @@ function gewonnen() {
   document.getElementById("statFloors").textContent = "2";
   document.getElementById("endTitel").textContent = "Ihr seid drin";
   document.getElementById("endSatz").textContent = S.verloren === 0
-    ? "Keine einzige verloren, und das auf zwei Floors. Nuri hat nicht mal nachgefragt."
-    : `${S.verloren}× musstest du jemanden vom Floor zurückholen. Trotzdem: fünf Bändchen, alle hinter der Tür, und die Nacht fängt gerade erst an.`;
+    ? "Keine einzige verloren, und das auf zwei Floors. Sera J schaut kurz hoch und nickt."
+    : `${S.verloren}× musstest du jemanden vom Floor zurückholen. Trotzdem: fünf Bändchen, alle fünf hinter der Tür, und Sera J legt gleich auf.`;
   // Der Zeitcode ist die Uhrzeit, zu der ihr durch die Tür seid
   const st = Math.floor(S.uhr / 3600) % 24, mi = Math.floor(S.uhr / 60) % 60;
   const zeit = `${String(st).padStart(2,"0")}${String(mi).padStart(2,"0")}`;
@@ -999,11 +991,11 @@ function gewonnen() {
     const d = document.createElement("div");
     d.className = "band";
     d.innerHTML = `<span class="pkt"></span><span class="nm">${f.name}</span>` +
-                  `<span class="zc">GLM·0210·${zeit}·${String(i + 1).padStart(2,"0")}</span>`;
+                  `<span class="zc">GLM·2410·${zeit}·${String(i + 1).padStart(2,"0")}</span>`;
     reihe.appendChild(d);
   });
   S.letzteZeit = sek;
-  S.letzterCode = `GLM·0210·${zeit}`;
+  S.letzterCode = `GLM·2410·${zeit}`;
   document.getElementById("eintrag").hidden = false;
   document.getElementById("listeHinweis").hidden = true;
   document.getElementById("teilen").hidden = true;
@@ -1106,6 +1098,12 @@ function questLeuteBauen() {
     akz:"#ffd04e", stil:"lang", acc:["netz","guertel","shades"],
   };
   S.gemurmel = 0; S.stehWer = -1; S.stehZeit = 0;
+  // Sera J wartet hinter der Tür
+  S.sera = {
+    x: 1625, y: 172, bob: 0, mann: true, uhr: true, tattoo: true,
+    haar:"#3d2c1f", haut:"#f0cba6", fit:"#131217", hose:"#16151a",
+    akz:"#c9d1de", stil:"buzz", acc:["kopfhoerer"],
+  };
 }
 
 const SUCH_ANTWORT = [
@@ -1341,6 +1339,24 @@ function weltGrenzen(et) {
   return (GRENZEN[et] = {x1: x1 - 70, y1: y1 - 80, x2: x2 + 70, y2: y2 + 60});
 }
 
+
+/* Das Funkeln aus dem Glimmer-Zeichen: vier schlanke Zacken, nur Kontur */
+const GLIMMER_ORANGE = "#ea6412";
+const GLIMMER_CREME  = "#f7e7c4";
+function funkel(c, x, y, r, dreh, farbe, dick) {
+  c.save(); c.translate(x, y); c.rotate(dreh || 0);
+  c.beginPath();
+  c.moveTo(0, -r);
+  c.quadraticCurveTo(r*0.11, -r*0.11, r, 0);
+  c.quadraticCurveTo(r*0.11, r*0.11, 0, r);
+  c.quadraticCurveTo(-r*0.11, r*0.11, -r, 0);
+  c.quadraticCurveTo(-r*0.11, -r*0.11, 0, -r);
+  c.closePath();
+  c.strokeStyle = farbe; c.lineWidth = dick || Math.max(1.2, r*0.065);
+  c.lineJoin = "round"; c.stroke();
+  c.restore();
+}
+
 function rundRect(c, x, y, w, h, r) {
   const rr = Math.min(r, w/2, h/2);
   c.beginPath();
@@ -1445,6 +1461,18 @@ function welt() {
   /* --- Möbel --- */
   for (const m of MOEBEL) if (m.et === et) moebel(m);
   wcDeko();
+
+  // Der Name auf der Kanzel
+  cx.save();
+  cx.font = `800 21px ${"'Bricolage Grotesque', sans-serif"}`;
+  cx.fillStyle = "rgba(247,231,196,.55)";
+  cx.textAlign = "center";
+  cx.fillText("SERA J", 1520, 204);
+  cx.font = `400 9px ${"'DM Mono', monospace"}`;
+  cx.fillStyle = "rgba(247,231,196,.35)";
+  cx.fillText("RES NULLIUS", 1520, 186);
+  cx.textAlign = "left";
+  cx.restore();
 
   /* --- Licht --- */
   cx.save(); cx.globalCompositeOperation = "lighter";
@@ -1561,16 +1589,19 @@ function vordach() {
   cx.save();
   cx.shadowColor = "rgba(0,0,0,.5)"; cx.shadowBlur = 10; cx.shadowOffsetY = 4;
   rundRect(cx, t.x - 106, t.y - 50, 216, 30, 6);
-  cx.fillStyle = "#1c1030"; cx.fill();
+  cx.fillStyle = GLIMMER_ORANGE; cx.fill();
   cx.restore();
-  cx.strokeStyle = "rgba(255,158,203,.5)"; cx.lineWidth = 1.5;
+  cx.strokeStyle = "rgba(247,231,196,.6)"; cx.lineWidth = 1.5;
   rundRect(cx, t.x - 103, t.y - 47, 210, 24, 5); cx.stroke();
-  cx.font = `800 16px ${"'Bricolage Grotesque', sans-serif"}`;
-  cx.fillStyle = "#ff9ecb"; cx.textAlign = "center";
-  cx.fillText("glimmer", t.x + 2, t.y - 29);
+  cx.font = `800 17px ${"'Bricolage Grotesque', sans-serif"}`;
+  cx.fillStyle = GLIMMER_CREME; cx.textAlign = "center";
+  cx.fillText("Glimmer", t.x + 2, t.y - 29);
+  const fz = 1 + Math.sin(S.t * 2.6) * 0.16;
+  funkel(cx, t.x - 48, t.y - 36, 9.5 * fz, 0.3, GLIMMER_CREME, 1.2);
+  funkel(cx, t.x + 52, t.y - 36, 7 * fz, -0.3, GLIMMER_CREME, 1.1);
   cx.font = `400 8px ${"'DM Mono', monospace"}`;
   cx.fillStyle = "rgba(255,243,248,.5)";
-  cx.fillText("ERÖFFNUNG · 02.10.2026 · 23:00 – 10:00", t.x + 2, t.y - 55);
+  cx.fillText("RES NULLIUS · 24.10.2026 · AB 24:00", t.x + 2, t.y - 55);
   cx.textAlign = "left";
 
   // Gleise auf dem Vorplatz — der Oberhafen war Bahngelaende
@@ -1811,6 +1842,7 @@ function figur(f, groesseF = 1, leuchten = null) {
   const akz = f.akz || "#3ef1e4";
   const haar = f.haar || "#ff3f9f";
   const stil = f.stil || "lang";
+  const mann = !!f.mann;
 
   cx.fillStyle = "rgba(0,0,0,.4)";
   cx.beginPath(); cx.ellipse(f.x, f.y + 14.5*s, 11*s, 4.2*s, 0, 0, 7); cx.fill();
@@ -1824,7 +1856,7 @@ function figur(f, groesseF = 1, leuchten = null) {
   }
 
   // Lange Haare, hintere Haelfte
-  if (stil !== "kurz") {
+  if (stil !== "kurz" && stil !== "buzz") {
     cx.fillStyle = haar;
     rundRect(cx, f.x - 11.4*s, y - 28*s, 22.8*s, 27*s, 10*s); cx.fill();
   }
@@ -1856,19 +1888,38 @@ function figur(f, groesseF = 1, leuchten = null) {
   rundRect(cx, f.x + 0.8*s, y + (13.4 - geh*0.32)*s, 7.8*s, 2.2*s, 1.1*s); cx.fill();
 
   // Arme
-  cx.strokeStyle = f.haut; cx.lineWidth = 2.5*s; cx.lineCap = "round";
+  cx.strokeStyle = f.haut; cx.lineWidth = (mann ? 2.9 : 2.5)*s; cx.lineCap = "round";
   cx.beginPath();
   cx.moveTo(f.x - 5.6*s, y - 10.4*s); cx.lineTo(f.x - 7.8*s, y - 1.6*s);
   cx.moveTo(f.x + 5.6*s, y - 10.4*s); cx.lineTo(f.x + 7.8*s, y - 1.6*s);
   cx.stroke(); cx.lineCap = "butt";
+  if (f.tattoo) {
+    cx.fillStyle = "rgba(24,16,30,.45)";
+    cx.fillRect(f.x - 7.9*s, y - 6.4*s, 1.5*s, 2.4*s);
+    cx.fillRect(f.x + 6.4*s, y - 7.2*s, 1.3*s, 1.9*s);
+    cx.fillRect(f.x + 6.8*s, y - 4.4*s, 1.1*s, 1.5*s);
+  }
+  if (f.uhr) {
+    cx.fillStyle = "#c9d1de";
+    rundRect(cx, f.x + 6.3*s, y - 3.8*s, 3.4*s, 2.5*s, 1.1*s); cx.fill();
+    cx.fillStyle = "rgba(255,255,255,.55)";
+    rundRect(cx, f.x + 6.8*s, y - 3.4*s, 1.4*s, 0.9*s, 0.45*s); cx.fill();
+  }
 
   // Bauchfreies Oberteil mit Wespentaille
   const oben = () => {
     cx.beginPath();
-    cx.moveTo(f.x - 6.6*s, y - 11.6*s);
-    cx.lineTo(f.x + 6.6*s, y - 11.6*s);
-    cx.lineTo(f.x + 4.2*s, y - 4.6*s);
-    cx.lineTo(f.x - 4.2*s, y - 4.6*s);
+    if (mann) {
+      cx.moveTo(f.x - 7.6*s, y - 11.8*s);
+      cx.lineTo(f.x + 7.6*s, y - 11.8*s);
+      cx.lineTo(f.x + 6.4*s, y - 4.4*s);
+      cx.lineTo(f.x - 6.4*s, y - 4.4*s);
+    } else {
+      cx.moveTo(f.x - 6.6*s, y - 11.6*s);
+      cx.lineTo(f.x + 6.6*s, y - 11.6*s);
+      cx.lineTo(f.x + 4.2*s, y - 4.6*s);
+      cx.lineTo(f.x - 4.2*s, y - 4.6*s);
+    }
     cx.closePath();
   };
   oben(); cx.fillStyle = f.fit; cx.fill();
@@ -1937,6 +1988,9 @@ function figur(f, groesseF = 1, leuchten = null) {
     cx.beginPath(); cx.ellipse(f.x, y - 23.6*s, 10.2*s, 7.4*s, 0, Math.PI, Math.PI*2); cx.fill();
     rundRect(cx, f.x - 10.6*s, y - 24*s, 4.6*s, 20*s, 2.3*s); cx.fill();
     rundRect(cx, f.x + 6*s, y - 24*s, 4.6*s, 20*s, 2.3*s); cx.fill();
+  } else if (stil === "buzz") {
+    cx.beginPath(); cx.ellipse(f.x, y - 22.4*s, 9.9*s, 7.8*s, 0, Math.PI, Math.PI*2); cx.fill();
+    rundRect(cx, f.x - 9.9*s, y - 22.8*s, 19.8*s, 5.4*s, 2.6*s); cx.fill();
   } else if (stil === "kurz") {
     cx.beginPath(); cx.ellipse(f.x, y - 23.2*s, 10.4*s, 7.6*s, 0, Math.PI, Math.PI*2); cx.fill();
     rundRect(cx, f.x - 10.4*s, y - 23.6*s, 4.4*s, 12*s, 2.2*s); cx.fill();
@@ -1967,9 +2021,11 @@ function figur(f, groesseF = 1, leuchten = null) {
 
   // Gesicht mit viel Make-up
   if (schautHer && !acc.includes("visor") && !acc.includes("brille")) {
-    cx.fillStyle = farbeAlpha(akz, .42);
-    cx.beginPath(); cx.ellipse(f.x - 3.7*s, y - 20.6*s, 3.2*s, 2*s, -0.2, 0, 7); cx.fill();
-    cx.beginPath(); cx.ellipse(f.x + 3.7*s, y - 20.6*s, 3.2*s, 2*s, 0.2, 0, 7); cx.fill();
+    if (!mann) {
+      cx.fillStyle = farbeAlpha(akz, .42);
+      cx.beginPath(); cx.ellipse(f.x - 3.7*s, y - 20.6*s, 3.2*s, 2*s, -0.2, 0, 7); cx.fill();
+      cx.beginPath(); cx.ellipse(f.x + 3.7*s, y - 20.6*s, 3.2*s, 2*s, 0.2, 0, 7); cx.fill();
+    }
     cx.fillStyle = "#fffdfb";
     cx.beginPath(); cx.ellipse(f.x - 3.7*s, y - 19.4*s, 2.8*s, 2.3*s, -0.12, 0, 7); cx.fill();
     cx.beginPath(); cx.ellipse(f.x + 3.7*s, y - 19.4*s, 2.8*s, 2.3*s, 0.12, 0, 7); cx.fill();
@@ -1982,22 +2038,42 @@ function figur(f, groesseF = 1, leuchten = null) {
     cx.fillStyle = "rgba(255,255,255,.95)";
     cx.beginPath(); cx.arc(f.x - 4.3*s, y - 20*s, 0.75*s, 0, 7); cx.fill();
     cx.beginPath(); cx.arc(f.x + 3.1*s, y - 20*s, 0.75*s, 0, 7); cx.fill();
-    // Wimpernkranz
-    cx.strokeStyle = "#1d1220"; cx.lineWidth = 1.2*s; cx.lineCap = "round";
-    cx.beginPath(); cx.arc(f.x - 3.7*s, y - 19.4*s, 3*s, Math.PI*1.04, Math.PI*1.9); cx.stroke();
-    cx.beginPath(); cx.arc(f.x + 3.7*s, y - 19.4*s, 3*s, Math.PI*1.1, Math.PI*1.96); cx.stroke();
-    cx.lineWidth = 0.95*s;
-    cx.beginPath(); cx.moveTo(f.x - 6.4*s, y - 20.8*s); cx.lineTo(f.x - 8.2*s, y - 22*s); cx.stroke();
-    cx.beginPath(); cx.moveTo(f.x + 6.4*s, y - 20.8*s); cx.lineTo(f.x + 8.2*s, y - 22*s); cx.stroke();
-    cx.lineCap = "butt";
-    // Glossy Lippen
-    cx.fillStyle = f.lippen || "#e0407e";
-    cx.beginPath(); cx.ellipse(f.x, y - 13.8*s, 3*s, 1.9*s, 0, 0, 7); cx.fill();
-    cx.fillStyle = "rgba(255,255,255,.62)";
-    cx.beginPath(); cx.ellipse(f.x - 0.8*s, y - 14.4*s, 1.2*s, 0.55*s, 0, 0, 7); cx.fill();
-    cx.fillStyle = "rgba(255,110,170,.3)";
-    cx.beginPath(); cx.arc(f.x - 7*s, y - 16.4*s, 2.2*s, 0, 7); cx.fill();
-    cx.beginPath(); cx.arc(f.x + 7*s, y - 16.4*s, 2.2*s, 0, 7); cx.fill();
+    cx.strokeStyle = "#1d1220"; cx.lineCap = "round";
+    if (mann) {
+      // schmale Lidlinie, keine Wimpern
+      cx.lineWidth = 0.9*s;
+      cx.beginPath(); cx.arc(f.x - 3.7*s, y - 19.4*s, 3*s, Math.PI*1.12, Math.PI*1.82); cx.stroke();
+      cx.beginPath(); cx.arc(f.x + 3.7*s, y - 19.4*s, 3*s, Math.PI*1.18, Math.PI*1.88); cx.stroke();
+      // Brauen
+      cx.lineWidth = 1.3*s;
+      cx.beginPath(); cx.moveTo(f.x - 6.4*s, y - 23.4*s); cx.lineTo(f.x - 1.4*s, y - 22.6*s); cx.stroke();
+      cx.beginPath(); cx.moveTo(f.x + 6.4*s, y - 23.4*s); cx.lineTo(f.x + 1.4*s, y - 22.6*s); cx.stroke();
+      cx.lineCap = "butt";
+      // schmaler Mund
+      cx.strokeStyle = "#7a3a48"; cx.lineWidth = 1.5*s; cx.lineCap = "round";
+      cx.beginPath(); cx.moveTo(f.x - 2.4*s, y - 13.8*s); cx.lineTo(f.x + 2.4*s, y - 13.8*s); cx.stroke();
+      cx.lineCap = "butt";
+      // Dreitagebart: Kinn und Kiefer, dazu ein Schnauzer
+      cx.fillStyle = "rgba(34,22,20,.26)";
+      cx.beginPath(); cx.ellipse(f.x, y - 13.6*s, 6.6*s, 4.8*s, 0, 0, Math.PI); cx.fill();
+      cx.fillStyle = "rgba(34,22,20,.34)";
+      rundRect(cx, f.x - 3.2*s, y - 15.8*s, 6.4*s, 1.5*s, 0.7*s); cx.fill();
+    } else {
+      cx.lineWidth = 1.2*s;
+      cx.beginPath(); cx.arc(f.x - 3.7*s, y - 19.4*s, 3*s, Math.PI*1.04, Math.PI*1.9); cx.stroke();
+      cx.beginPath(); cx.arc(f.x + 3.7*s, y - 19.4*s, 3*s, Math.PI*1.1, Math.PI*1.96); cx.stroke();
+      cx.lineWidth = 0.95*s;
+      cx.beginPath(); cx.moveTo(f.x - 6.4*s, y - 20.8*s); cx.lineTo(f.x - 8.2*s, y - 22*s); cx.stroke();
+      cx.beginPath(); cx.moveTo(f.x + 6.4*s, y - 20.8*s); cx.lineTo(f.x + 8.2*s, y - 22*s); cx.stroke();
+      cx.lineCap = "butt";
+      cx.fillStyle = f.lippen || "#e0407e";
+      cx.beginPath(); cx.ellipse(f.x, y - 13.8*s, 3*s, 1.9*s, 0, 0, 7); cx.fill();
+      cx.fillStyle = "rgba(255,255,255,.62)";
+      cx.beginPath(); cx.ellipse(f.x - 0.8*s, y - 14.4*s, 1.2*s, 0.55*s, 0, 0, 7); cx.fill();
+      cx.fillStyle = "rgba(255,110,170,.3)";
+      cx.beginPath(); cx.arc(f.x - 7*s, y - 16.4*s, 2.2*s, 0, 7); cx.fill();
+      cx.beginPath(); cx.arc(f.x + 7*s, y - 16.4*s, 2.2*s, 0, 7); cx.fill();
+    }
   }
 
   // Sonnenbrille auf der Stirn — das Erkennungszeichen
@@ -2103,6 +2179,33 @@ function statisten() {
                fit:r.fit, akz:r.akz, acc:r.acc, hose:r.hose, stil:r.stil, jacke:false};
     figur(f, 1.0, r.entdeckt ? "#ffd04e" : null);
     if (r.sagt > 0) sprechblase(f, r.gefragt ? "Na gut." : "Nuri.", "#ffd04e");
+  }
+
+  // Publikum, das nicht tanzt
+  STEHPLAETZE.forEach((q, i) => {
+    const wack = Math.sin(S.t * (1.1 + (i % 5) * 0.17) + i) * 2.2;
+    const f = {x:q[0] + wack, y:q[1], schritt:S.t * 1.3 + i * 1.7, blick:Math.PI/2,
+               haar:["#ff3f9f","#fbf7ff","#b6c9ff","#170e1e","#6bf0c0","#ffd04e","#bb6bff"][i % 7],
+               haut:["#f3c9a8","#c98d63","#8a5638","#f6d9bb","#e8bd95"][i % 5],
+               fit: ["#2a1638","#1d1030","#241540","#33193f"][i % 4],
+               hose:["#3a2a55","#2b2140","#402a4e"][i % 3],
+               akz: ["#3ef1e4","#ff5cb8","#6cf5b4","#ffd04e","#bb6bff"][i % 5],
+               acc: accVon(i), stil:["lang","kurz","zoepfe","pony","dutt"][i % 5], jacke:false};
+    figur(f, 0.92);
+    if (S.stehWer === i && S.stehZeit > 0) {
+      sprechblase(f, STEH_GESPRAECH[i % STEH_GESPRAECH.length], "#fff3f8");
+    }
+  });
+
+  // Sera J, hinter der Tür
+  if (S.sera) {
+    const k = S.sera;
+    k.bob += 0.02 + S.puls * 0.04;
+    const f = {x:k.x, y:k.y, schritt:k.bob, blick:Math.PI/2, haar:k.haar, haut:k.haut,
+               fit:k.fit, akz:k.akz, acc:k.acc, hose:k.hose, stil:k.stil,
+               mann:true, uhr:true, tattoo:true, jacke:false};
+    figur(f, 1.06, "#3ef1e4");
+    if (S.phase === "backstage" || S.phase === "fertig") sprechblase(f, "Sera J", "#3ef1e4");
   }
 
   // Die Schlange: steht an, wartet, kommentiert
@@ -2821,7 +2924,7 @@ function introRahmen(dt) {
       cx.fillStyle = "#ffe6a0";
       cx.textAlign = "center"; cx.textBaseline = "middle";
       cx.font = `500 ${uh*0.42}px 'DM Mono',monospace`;
-      cx.fillText("STOCKMEYERSTRASSE 43  ·  OBERHAFEN  ·  23:14", mx, uy + uh*0.54);
+      cx.fillText("STOCKMEYERSTRASSE 43  ·  OBERHAFEN  ·  AB 24:00", mx, uy + uh*0.54);
       cx.restore();
     }
   }
