@@ -23,10 +23,10 @@
 html,body{height:100%;margin:0}
 body{background:#07050c;color:var(--sahne);font-family:var(--ui);overflow:hidden;touch-action:none}
 #buehne{
-  /* Genau mittig in der sicheren Flaeche, ohne Versatz */
+  /* Etwas oberhalb der Mitte: unten mehr Luft lassen, dann rutscht das Bild hoch */
   position:fixed;
   top:env(safe-area-inset-top,0px);right:0;
-  bottom:env(safe-area-inset-bottom,0px);left:0;
+  bottom:calc(env(safe-area-inset-bottom,0px) + 96px);left:0;
   display:grid;place-items:center;
 }
 #film{display:block;background:#07050c;box-shadow:0 0 60px rgba(0,0,0,.8)}
