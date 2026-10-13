@@ -23,10 +23,9 @@
 html,body{height:100%;margin:0}
 body{background:#07050c;color:var(--sahne);font-family:var(--ui);overflow:hidden;touch-action:none}
 #buehne{
-  /* Oben bleibt Platz fuer den Aufnahmehinweis von iOS, damit er beim
-     Zuschneiden nicht im Bild landet. Unten nur der Home-Balken. */
+  /* Genau mittig in der sicheren Flaeche, ohne Versatz */
   position:fixed;
-  top:calc(env(safe-area-inset-top,0px) + 34px);right:0;
+  top:env(safe-area-inset-top,0px);right:0;
   bottom:env(safe-area-inset-bottom,0px);left:0;
   display:grid;place-items:center;
 }
