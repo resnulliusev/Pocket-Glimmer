@@ -1111,19 +1111,16 @@ function s4() {                                   // Sera J legt auf
     figur(f, 1, null); cx.restore();
   }
   cx.textAlign = "center";
-  cx.font = `400 44px 'Silkscreen',monospace`;
-  cx.fillStyle = "rgba(107,29,12,.75)";
-  cx.fillText("RES NULLIUS", BREIT/2, HOCH*0.772);
-  cx.font = `800 124px 'Poppins',sans-serif`;
-  cx.fillStyle = G_ROST_TIEF;
-  cx.fillText("SERA J", BREIT/2, HOCH*0.845);
+  // Alle drei gleich gross, in dieser Reihenfolge
   cx.font = `800 82px 'Poppins',sans-serif`;
-  cx.fillStyle = G_ROST;
-  cx.fillText("FORMULA.303", BREIT/2, HOCH*0.912);
-  funkel(cx, BREIT*0.155, HOCH*0.828, 40, 0.3, "rgba(255,245,220,.95)");
-  funkel(cx, BREIT*0.845, HOCH*0.828, 40, -0.3, "rgba(255,245,220,.95)");
+  cx.fillStyle = G_ROST_TIEF;
+  cx.fillText("FORMULA.303", BREIT/2, HOCH*0.790);
+  cx.fillText("RES NULLIUS", BREIT/2, HOCH*0.852);
+  cx.fillText("SERA J",      BREIT/2, HOCH*0.914);
+  funkel(cx, BREIT*0.155, HOCH*0.845, 40, 0.3, "rgba(255,245,220,.95)");
+  funkel(cx, BREIT*0.845, HOCH*0.845, 40, -0.3, "rgba(255,245,220,.95)");
   cx.textAlign = "left";
-  textkarte(["Zwei Floors.", "Sera J legt auf."], HOCH*0.15, 86, "#fff3f8", "24. OKTOBER · AB 24 UHR");
+  textkarte(["Zwei Floors."], HOCH*0.15, 86, "#fff3f8", "24. OKTOBER · AB 24 UHR");
   cx.restore();
 }
 
