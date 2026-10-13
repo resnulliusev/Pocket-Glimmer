@@ -1,8 +1,8 @@
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Trailer">
 <meta name="theme-color" content="#07050c">
 <title>Pocket Glimmer Trailer</title>
@@ -22,7 +22,12 @@
 *{box-sizing:border-box}
 html,body{height:100%;margin:0}
 body{background:#07050c;color:var(--sahne);font-family:var(--ui);overflow:hidden;touch-action:none}
-#buehne{position:fixed;inset:0;display:grid;place-items:center}
+#buehne{
+  position:fixed;
+  top:env(safe-area-inset-top,0px);right:0;
+  bottom:env(safe-area-inset-bottom,0px);left:0;
+  display:grid;place-items:center;
+}
 #film{display:block;background:#07050c;box-shadow:0 0 60px rgba(0,0,0,.8)}
 
 #start{
@@ -663,7 +668,8 @@ const Ton = {
 /* ---------- Bühne ---------- */
 let M = 1;
 function groesse() {
-  const w = innerWidth, h = innerHeight;
+  const b = document.getElementById("buehne").getBoundingClientRect();
+  const w = Math.round(b.width), h = Math.round(b.height);
   M = Math.min(w / BREIT, h / HOCH);
   const dpr = Math.min(devicePixelRatio || 1, 2);
   cv.style.width = (BREIT * M) + "px";
