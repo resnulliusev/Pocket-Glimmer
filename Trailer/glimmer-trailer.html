@@ -1,5 +1,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Trailer">
+<meta name="theme-color" content="#07050c">
 <title>Pocket Glimmer Trailer</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1171,7 +1176,8 @@ function s6() {                                   // Jacken weg, Backstage rein
 }
 
 function s7() {                                   // Was es zu gewinnen gibt
-  const a = alpha(22.2, 27.3, 0.6, 0.3); if (!a) return;
+  // Kein Ausblenden am Ende: das letzte Bild soll stehen bleiben
+  const a = alpha(22.2, ZEIT + 9, 0.6, 0.5); if (!a) return;
   cx.save(); cx.globalAlpha = a;
   const g = cx.createRadialGradient(BREIT/2, HOCH*0.42, 40, BREIT/2, HOCH*0.42, BREIT);
   g.addColorStop(0, G_HELL); g.addColorStop(1, G_DUNKEL);
